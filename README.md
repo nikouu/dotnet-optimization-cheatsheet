@@ -28,23 +28,20 @@ Nothing too scary here. The documentation should provide you with all the knowle
 
 ### Faster loops
 
-### Pooling
-Wrote a little about this on my own site: [Pooling in C#](https://www.nikouusitalo.com/blog/pooling-in-c/).
+### ThreadPool
 
-#### ThreadPool
+### ArrayPool
 
-#### ArrayPool
+### RecyclableMemoryStream
 
-#### RecyclableMemoryStream
-
-#### References
+### References
 [Microsoft.IO.RecyclableMemoryStream](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
 
-#### MemoryPool
+### MemoryPool
 
-#### ObjectPool
+### ObjectPool
 
-#### References
+### References
 [Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
 
 ## 🟡 A little Risky
