@@ -24,23 +24,25 @@ These risk ratings are arbitrary 🤷‍♀️
 ## 🟢 Least Risky 
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-### `Span<T>`
+### Span
+
+### Faster loops
 
 ### Pooling
 Wrote a little about this on my own site: [Pooling in C#](https://www.nikouusitalo.com/blog/pooling-in-c/).
 
-#### `ThreadPool<T>`
+#### ThreadPool
 
-#### `ArrayPool<T>`
+#### ArrayPool
 
-#### `RecyclableMemoryStream`
+#### RecyclableMemoryStream
 
 #### References
 [Microsoft.IO.RecyclableMemoryStream](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
 
-#### `MemoryPool<T>`
+#### MemoryPool
 
-#### `ObjectPool<T>`
+#### ObjectPool
 
 #### References
 [Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
@@ -48,19 +50,19 @@ Wrote a little about this on my own site: [Pooling in C#](https://www.nikouusita
 ## 🟡 A little Risky
 All the usual .NET safeties are included, however you might need to have an understanding of the topic to not run into trouble in order to successfully use them.
 
-### `Async`
+### Async
 
-### `ValueTask<T>`
+### ValueTask
 
-#### `ManualResetValueTaskSourceCore`
+#### ManualResetValueTaskSourceCore
 
 ## 🔴☠ Very Risky
 Prod might go up in a spectacular ball of flame.
 ![](images\mad-max-fireball.gif)
 
-### Faster loops
+### Even faster loops
 
 #### References
 [The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
 
-### `Unsafe`
+### Unsafe
