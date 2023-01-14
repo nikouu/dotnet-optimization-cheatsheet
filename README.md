@@ -4,7 +4,17 @@ Practical neato performance/speed/"hacks"/good practices for .NET. Like bypassin
 
 So let's just call these *educational*. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
 
-In respect to taking on something from below:
+## ‼ Read This First ‼
+1. Try not to pre-maturely optimise
+1. Understand the risks involved
+1. Is the time spent doing this worth it?
+
+If you're in a good space to do so, read on. Or even if you aren't, I'm not your boss.
+
+## Starting Optimizing
+
+In the shortest way possible:
+
 1. Write unit tests so you have a baseline for your functionality
 1. Use something like [BenchmarkDotNet](https://benchmarkdotnet.org/) to get a before performance baseline
 1. Write your change
@@ -19,7 +29,7 @@ To clarify some key concepts that keep coming back below in as short as possible
 | Scalability | Throughput                                                                                                                                                                                              |
 | Allocations | Boils down to "work the garbage collector need to do". The GC stops our code entirely when cleaning up so if we can relieve pressure. We can also stop inefficient copying of objects around in memory. |
 
-Aaaand risk ratings are arbitrary 🤷‍♀️
+By the way, the risk ratings are arbitrary 🤷‍♀️
 
 ## 🟢 Least Risky 
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
