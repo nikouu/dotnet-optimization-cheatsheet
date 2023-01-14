@@ -37,7 +37,7 @@ Nothing too scary here. The documentation should provide you with all the knowle
 
 ### RecyclableMemoryStream
 
-### References
+#### References
 [Microsoft.IO.RecyclableMemoryStream](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
 
 ### MemoryPool
