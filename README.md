@@ -11,34 +11,62 @@ In respect to taking on something from below:
 1. Run tests
 1. Benchmark to see if it did improve what you expected
 
-To clarify some key terms:
+To clarify some key concepts that keep coming back below in as short as possible (each one can be it's own book):
 
-| Term        | Meaning    |
-| ----------- | ---------- |
-| Performance | Speed      |
-| Scalability | Throughput |
+| Concept     | Synopsis                                                                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Performance | Speed                                                                                                                                                                                                   |
+| Scalability | Throughput                                                                                                                                                                                              |
+| Allocations | Boils down to "work the garbage collector need to do". The GC stops our code entirely when cleaning up so if we can relieve pressure. We can also stop inefficient copying of objects around in memory. |
 
+These risk ratings are arbitrary 🤷‍♀️
 
+## Least Risky
+Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-## `Span`
+### `Span<T>`
 
-## Faster loops
-
-## `ValueTask`
-
-### `ManualResetValueTaskSourceCore`
-
-## `Async`
-
-## Pooling
+### Pooling
 Wrote a little about this on my own site: [Pooling in C#](https://www.nikouusitalo.com/blog/pooling-in-c/).
 
-### `ThreadPool`
+#### `ThreadPool<T>`
 
-### `ArrayPool`
+#### `ArrayPool<T>`
 
-### `RecyclableMemoryStream`
+#### `RecyclableMemoryStream`
 
-### `MemoryPool`
+#### References
+[Microsoft.IO.RecyclableMemoryStream](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
 
-### `ObjectPool`
+#### `MemoryPool<T>`
+
+#### `ObjectPool<T>`
+
+#### References
+[Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
+
+## A little Risky
+All the usual .NET safeties are included, however you might need to have an understanding of the topic to not run into trouble in order to successfully use them.
+
+### `Async`
+
+### `ValueTask<T>`
+
+#### `ManualResetValueTaskSourceCore`
+
+## Very Risky
+Prod might go up in a spectacular ball of flame.
+![](images\mad-max-fireball.gif)
+
+### Faster loops
+
+#### References
+[The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
+
+
+
+
+
+
+
+
