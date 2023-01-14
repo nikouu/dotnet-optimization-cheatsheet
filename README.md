@@ -4,6 +4,13 @@ Real neato performance/speed/"hacks" for .NET. Like bypassing safties in your ca
 
 So let's just call these *educational*.
 
+In respect to taking on something from below:
+1. Write unit tests so you have a baseline for your functionality
+1. Use something like [BenchmarkDotNet](https://benchmarkdotnet.org/) to get a before performance baseline
+1. Write your change
+1. Run tests
+1. Benchmark to see if it did improve what you expected
+
 To clarify some key terms:
 
 | Term        | Meaning    |
@@ -11,7 +18,7 @@ To clarify some key terms:
 | Performance | Speed      |
 | Scalability | Throughput |
 
-Enjoy!
+
 
 ## `Span`
 
