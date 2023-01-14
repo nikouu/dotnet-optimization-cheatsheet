@@ -1,8 +1,8 @@
 # Dotnet Optimization Cheatsheet
 
-Practical neato performance/speed/"hacks" for .NET. Like bypassing safties in your car and ripping out the seats in your car to make it go faster, some of these come with a ⚠**RISK**⚠. This means you should understand your own scenario and what the relevant risks are. 
+Practical neato performance/speed/"hacks"/good practices for .NET. Like bypassing safties in your car and ripping out the seats in your car to make it go faster, some of these come with a ⚠**RISK**⚠. This means you should understand your own scenario and what the relevant risks are. 
 
-So let's just call these *educational*. Each item is fully referenced so you can educate yourself too. Oh and they're more about language features over things like what should be existing good coding practices and architecture.
+So let's just call these *educational*. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
 
 In respect to taking on something from below:
 1. Write unit tests so you have a baseline for your functionality
