@@ -26,6 +26,9 @@ Nothing too scary here. The documentation should provide you with all the knowle
 
 ### Span
 
+#### References
+[Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
+
 ### Faster loops
 
 ### ThreadPool
@@ -40,9 +43,6 @@ Nothing too scary here. The documentation should provide you with all the knowle
 ### MemoryPool
 
 ### ObjectPool
-
-### References
-[Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
 
 ## 🟡 A little Risky
 All the usual .NET safeties are included, however you might need to have an understanding of the topic to not run into trouble in order to successfully use them.
