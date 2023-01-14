@@ -35,17 +35,21 @@ Nothing too scary here. The documentation should provide you with all the knowle
 
 ### ArrayPool
 
+### MemoryPool
+
+### ObjectPool
+
 ### RecyclableMemoryStream
 
 #### References
 [Microsoft.IO.RecyclableMemoryStream](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
 
-### MemoryPool
-
-### ObjectPool
+### Removing unnecessary boxing/unboxing
 
 ## 🟡 A little Risky
 All the usual .NET safeties are included, however you might need to have an understanding of the topic to not run into trouble in order to successfully use them.
+
+### Parallel ForEach
 
 ### Async
 
@@ -54,7 +58,7 @@ All the usual .NET safeties are included, however you might need to have an unde
 #### ManualResetValueTaskSourceCore
 
 ## 🔴☠ Very Risky
-Prod might go up in a spectacular ball of flame.
+Prod might go up in a spectacular ball of flame 🔥
 ![](images/mad-max-fireball.gif)
 
 ### Even faster loops
