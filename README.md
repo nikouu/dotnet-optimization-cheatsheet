@@ -58,7 +58,7 @@ All the usual .NET safeties are included, however you might need to have an unde
 
 ## 🔴☠ Very Risky
 Prod might go up in a spectacular ball of flame.
-![](images\mad-max-fireball.gif)
+![](images/mad-max-fireball.gif)
 
 ### Even faster loops
 
