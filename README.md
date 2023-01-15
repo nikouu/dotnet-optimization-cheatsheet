@@ -1,6 +1,6 @@
 # Dotnet Optimization Cheatsheet
 
-🏗️ STill under construction 🏗️
+🏗️ Still under construction 🏗️
 
 Practical neato performance/speed/"hacks"/good practices for .NET I've collected over time. Like bypassing safeties in your car and ripping out the seats to make it go faster, some of these come with a ⚠**RISK**⚠. This means you should understand your own scenario and what the relevant risks are. 
 
