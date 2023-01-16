@@ -36,10 +36,11 @@ By the way, the risk ratings are arbitrary 🤷‍♀️
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-### Span
+### Span<T>, Memory<T>
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-7.0)
+[Memory<T> and Span<T> usage guidelines](https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines)
 [Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
 
 ### Faster loops
@@ -80,7 +81,7 @@ Nothing too scary here. The documentation should provide you with all the knowle
 [.NET Performance Tips - Strings](https://learn.microsoft.com/en-us/dotnet/framework/performance/performance-tips#strings)
 
 ## 🟡 A Little Risky 🤔
-All the usual .NET safeties are included, however you might need to have an understanding of the topic to not run into trouble in order to successfully use them.
+All the usual .NET safeties are included, however you may need to have a deeper understanding of the topic to not run into trouble in order to successfully use them.
 
 ### Parallel ForEach
 
@@ -101,10 +102,28 @@ All the usual .NET safeties are included, however you might need to have an unde
 [Official DevBlog](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/)
 [Official Documentation for ManualResetValueTaskSourceCore](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.sources.manualresetvaluetasksourcecore-1?view=net-7.0)
 
+### Garbage Collection
+
+#### References
+[Garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
+[Workstation and server garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
+
 ### Struct
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
+
+### AOT
+
+#### References
+[Native AOT Deployment Official Guide](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
+[.NET AOT Resources: 2022 Edition](https://www.nikouusitalo.com/blog/net-aot-resources-2022-edition/) (Self plug)
+[.NET 7 Self-Contained, NativeAOT, and ReadyToRun Cheatsheet](https://www.nikouusitalo.com/blog/net-7-self-contained-nativeaot-and-readytorun-cheatsheet/) (Self plug)
+
+### Vectorizing
+
+#### References
+[Use SIMD-accelerated numeric types](https://learn.microsoft.com/en-us/dotnet/standard/simd)
 
 ## 🔴 Very Risky ☠
 🔥 Prod might go up in a spectacular ball of flame 🔥
@@ -115,6 +134,7 @@ All the usual .NET safeties are included, however you might need to have an unde
 
 #### References
 [The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
+[Unusual optimizations; ref foreach and ref returns - Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html)
 
 ### Unsafe
 
