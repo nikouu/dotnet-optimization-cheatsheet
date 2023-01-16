@@ -40,7 +40,9 @@ Nothing too scary here. The documentation should provide you with all the knowle
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-7.0)
+
 [Memory<T> and Span<T> usage guidelines](https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines)
+
 [Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
 
 ### Faster loops
@@ -87,6 +89,7 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreachasync?view=net-7.0)
+
 [Official Guide](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-write-a-simple-parallel-foreach-loop)
 
 ### Async
@@ -100,12 +103,14 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [Official DevBlog](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/)
+
 [Official Documentation for ManualResetValueTaskSourceCore](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.sources.manualresetvaluetasksourcecore-1?view=net-7.0)
 
 ### Garbage Collection
 
 #### References
 [Garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
+
 [Workstation and server garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
 
 ### Struct
@@ -117,7 +122,9 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [Native AOT Deployment Official Guide](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
+
 [.NET AOT Resources: 2022 Edition](https://www.nikouusitalo.com/blog/net-aot-resources-2022-edition/) (Self plug)
+
 [.NET 7 Self-Contained, NativeAOT, and ReadyToRun Cheatsheet](https://www.nikouusitalo.com/blog/net-7-self-contained-nativeaot-and-readytorun-cheatsheet/) (Self plug)
 
 ### Vectorizing
@@ -134,6 +141,7 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
+
 [Unusual optimizations; ref foreach and ref returns - Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html)
 
 ### Unsafe
