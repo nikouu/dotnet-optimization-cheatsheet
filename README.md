@@ -18,7 +18,7 @@ This readme is giving you the tools. It's up to you to understand how and where 
 In the shortest way possible:
 
 1. Write unit tests so you have a baseline for your functionality
-1. Use something like [BenchmarkDotNet](https://benchmarkdotnet.org/) to get a before performance baseline
+1. Use something like [BenchmarkDotNet](https://benchmarkdotnet.org/) or the [Performance Profiler](https://learn.microsoft.com/en-us/visualstudio/profiling/?view=vs-2022) in Visual Studio to get a before performance baseline
 1. Write your change
 1. Run tests
 1. Benchmark to see if it did improve what you expected
