@@ -11,7 +11,9 @@ So let's just call these *educational*. Each item is fully referenced so you can
 1. Understand the risks involved
 1. Is the time spent doing this worth it?
 
-This readme is giving you the tools. It's up to you to understand how and where to use them. *Or don't, I'm not gonna tell you how to live your life.*
+This readme is giving you the tools. It's up to you to understand how and where to use them. 
+
+*Or don't, I'm not gonna tell you how to live your life.*
 
 ## Starting Optimizing
 
@@ -117,7 +119,9 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [Efficiently Streaming Large HTTP Responses With HttpClient - Tugberk Ugurlu](https://www.tugberkugurlu.com/archive/efficiently-streaming-large-http-responses-with-httpclient)
+
 [Streaming with New .NET HttpClient and HttpCompletionOption.ResponseHeadersRead - Tugberk Ugurlu](https://www.tugberkugurlu.com/archive/streaming-with-newnet-httpclient-and-httpcompletionoption-responseheadersread)
+
 [Efficient api calls with HttpClient and JSON.NET - John Thiriet](https://johnthiriet.com/efficient-api-calls/)
 
 ### Struct
