@@ -168,3 +168,9 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
+
+### CollectionsMarshal
+
+#### References
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal?view=net-7.0)
+[Double the Performance of your Dictionary in C# - Nick Chapsas](https://www.youtube.com/watch?v=rygIP5sh00M)
