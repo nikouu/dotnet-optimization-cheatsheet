@@ -129,6 +129,15 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
 
+### Overriding GetHashCode() 
+
+#### References
+[Official DevBlog](https://devblogs.microsoft.com/premier-developer/performance-implications-of-default-struct-equality-in-c/)
+
+[Jon Skeet SO answer](https://stackoverflow.com/a/263416)
+
+[Struct equality performance in .NET - Gérald Barré](https://www.meziantou.net/struct-equality-performance-in-dotnet.htm)
+
 ### AOT
 
 #### References
