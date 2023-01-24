@@ -129,7 +129,7 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
 
-### Overriding GetHashCode() 
+### Overriding GetHashCode() and Equals for Structs
 
 #### References
 [Official DevBlog](https://devblogs.microsoft.com/premier-developer/performance-implications-of-default-struct-equality-in-c/)
