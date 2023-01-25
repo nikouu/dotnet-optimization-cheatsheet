@@ -152,6 +152,11 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 #### References
 [Use SIMD-accelerated numeric types](https://learn.microsoft.com/en-us/dotnet/standard/simd)
 
+### Loop Alignment
+
+#### References
+[DevBlog Post](https://devblogs.microsoft.com/dotnet/loop-alignment-in-net-6/)
+
 ## 🔴 Very Risky ☠
 🔥 Prod might go up in a spectacular ball of flame 🔥
 
