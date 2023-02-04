@@ -69,6 +69,11 @@ Nothing too scary here. The documentation should provide you with all the knowle
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.objectpool.objectpool-1?view=dotnet-plat-ext-7.0)
 
+### StringPool
+
+#### References
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.toolkit.highperformance.buffers.stringpool?view=win-comm-toolkit-dotnet-7.1)
+
 ### RecyclableMemoryStream
 
 #### References
