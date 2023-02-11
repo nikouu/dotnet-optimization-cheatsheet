@@ -38,6 +38,11 @@ By the way, the risk ratings are arbitrary 🤷‍♀️
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
+### Use less nullable types
+
+#### References
+[Tweet via Bartosz Adamczewski](https://twitter.com/badamczewski01/status/1542799681717149697)
+
 ### Use String.Compare()
 
 #### References
