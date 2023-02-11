@@ -38,6 +38,14 @@ By the way, the risk ratings are arbitrary 🤷‍♀️
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
+### Use String.Compare()
+
+#### References
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare?view=netcore-3.1)
+
+[Twitter post via Daniel Lawson](https://twitter.com/danylaws/status/1504381170347294727)
+
+
 ### Span<T>, Memory<T>
 
 #### References
