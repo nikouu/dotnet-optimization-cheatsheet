@@ -31,7 +31,7 @@ To clarify some key concepts that keep coming back below in as short as possible
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Performance | Speed                                                                                                                                                                                                   |
 | Scalability | Throughput                                                                                                                                                                                              |
-| Allocations | Boils down to "work the garbage collector need to do". The GC stops our code entirely when cleaning up so if we can relieve pressure. We can also stop inefficient copying of objects around in memory. |
+| Allocations | Boils down to both "needlessly shifting bits around" and "work the garbage collector need to do". The GC stops our code entirely when cleaning up so if we can relieve pressure. We can also stop inefficient copying of objects around in memory. |
 
 By the way, the risk ratings are arbitrary 🤷‍♀️
 
