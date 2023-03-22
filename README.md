@@ -35,6 +35,8 @@ To clarify some key concepts that keep coming back below in as short as possible
 
 By the way, the risk ratings are arbitrary 🤷‍♀️
 
+Oh and later .NET versions might render some of these invalid. For instance string interpolation used to be a tad slow, but had [a big performance glow up in .NET 6](https://devblogs.microsoft.com/dotnet/string-interpolation-in-c-10-and-net-6/).
+
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
