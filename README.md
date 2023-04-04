@@ -189,6 +189,11 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 [Unusual optimizations; ref foreach and ref returns - Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html)
 
+### Even even faster loops
+
+#### References
+[I Lied! The Fastest C# Loop Is Even Weirder - Nick Chapsas](https://www.youtube.com/watch?v=KLtMtxUihBk) (Nick, how do you keep finding these)
+
 ### Unsafe
 
 #### References
