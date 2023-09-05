@@ -40,12 +40,44 @@ Oh and later .NET versions might render some of these invalid. For instance stri
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-### Use less nullable types
+### Use less value nullable types
+[Nullable value types are boxed](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#boxing-and-unboxing) meaning there is unboxing work and null checking work happening. 
+
+```csharp
+int? Slow(int? x, int? y) {
+	int? sum = 0;
+	for (int i = 0; i < 1000; i++){
+		sum += x * y;
+	}
+	return sum;
+}
+```
+
+vs
+
+```csharp
+int? Fast(int x, int y) {
+	int? sum = 0;
+	for (int i = 0; i < 1000; i++){
+		sum += x * y;
+	}
+	return sum;
+}
+```
 
 #### References
-[Tweet via Bartosz Adamczewski](https://twitter.com/badamczewski01/status/1542799681717149697)
+[Tweet via Bartosz Adamczewski with infographics and explainers](https://twitter.com/badamczewski01/status/1542799681717149697)
 
 ### Use String.Compare()
+`String.Compare()` is a memory efficient way to compare strings. This is in respect to the memory inefficient method of comparing by doing `stringA.ToLower() == stringB.ToLower()` - which due to strings being immutable, has to create a new string for each `.ToLower()` call.
+
+```csharp
+var result = String.Compare("StringA", "StringB", StringComparison.OrdinalIgnoreCase);
+```
+
+Note: It's recommended to use the overload of [`Compare(String, String, StringComparison)`](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare?view=netcore-3.1#system-string-compare(system-string-system-string-system-stringcomparison)) rather than `Compare(String, String)` as via the documentation: 
+
+> When comparing strings, you should call the Compare(String, String, StringComparison) method, which requires that you explicitly specify the type of string comparison that the method uses. For more information, see Best Practices for Using Strings.
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare?view=netcore-3.1)
@@ -204,3 +236,8 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal?view=net-7.0)
 [Double the Performance of your Dictionary in C# - Nick Chapsas](https://www.youtube.com/watch?v=rygIP5sh00M)
+
+### Disallow Garbage Collection (for a time)
+
+#### References
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
