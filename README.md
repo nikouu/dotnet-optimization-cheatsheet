@@ -6,6 +6,8 @@ Practical neato performance/speed/"hacks"/good practices for .NET I've collected
 
 So let's just call these *educational*. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
 
+This is different from my [Optimization-Tools-And-Notes](https://github.com/nikouu/Optimization-Tools-And-Notes) repo as that is mostly tools for performance, and this is mostly code to help understand and make performance better.
+
 ## ‼ Read This First ‼
 1. Try not to pre-maturely optimise
 1. Understand the risks involved
