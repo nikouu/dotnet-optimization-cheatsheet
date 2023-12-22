@@ -86,6 +86,11 @@ Note: It's recommended to use the overload of [`Compare(String, String, StringCo
 
 [Twitter post via Daniel Lawson](https://twitter.com/danylaws/status/1504381170347294727)
 
+### Don't use async with large SqlClient data
+
+#### References
+[dotnet GitHub issue](https://github.com/dotnet/SqlClient/issues/593)
+
 
 ### Span<T>, Memory<T>
 
