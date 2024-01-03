@@ -9,6 +9,9 @@ So let's just call these *educational*. Each item is fully referenced so you can
 This is different from my [Optimization-Tools-And-Notes](https://github.com/nikouu/Optimization-Tools-And-Notes) repo as that is mostly tools for performance, and this is mostly code to help understand and make performance better.
 
 ## ‼ Read This First ‼
+
+> [_We always want our code to "run faster". But rarely do we ask – what is it running from?_](https://twitter.com/moyix/status/1449397749343047681)
+
 1. Try not to pre-maturely optimise
 1. Understand the risks involved
 1. Is the time spent doing this worth it?
