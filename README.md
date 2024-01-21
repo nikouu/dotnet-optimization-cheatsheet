@@ -91,7 +91,10 @@ Note: It's recommended to use the overload of [`Compare(String, String, StringCo
 
 ### String to GUID
 
-Tries to make the conversion from string to GUID without allocation.
+Tries to make the conversion from string to GUID without allocation. However, according to the Twitter replies (see references below) there are more ways to improve this by:
+- Moving off MD5
+- Using UTF16
+- Using `MemoryMarshal.AsBytes` instead of the UTF8 work
 
 ```csharp
 Guid ComputeGuid(string stringToConvert)
