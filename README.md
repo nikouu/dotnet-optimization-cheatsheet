@@ -125,7 +125,7 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 ```
 
 #### References
-[Via Immo Landwerth (terrajobst](https://twitter.com/terrajobst/status/1507808952146223106)
+[Via Immo Landwerth (terrajobst)](https://twitter.com/terrajobst/status/1507808952146223106)
 
 [GitHub repo it's used in](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L11)
 
