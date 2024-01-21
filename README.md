@@ -89,6 +89,44 @@ Note: It's recommended to use the overload of [`Compare(String, String, StringCo
 
 [Twitter post via Daniel Lawson](https://twitter.com/danylaws/status/1504381170347294727)
 
+### String to GUID
+
+Tries to make the conversion from string to GUID without allocation.
+
+```csharp
+Guid ComputeGuid(string stringToConvert)
+{
+    const int maxBytesOnStack = 256;
+
+    var encoding = Encoding.UTF8;
+    var maxByteCount = encoding.GetMaxByteCount(stringToConvert.Length);
+
+    if (maxByteCount <= maxBytesOnStack)
+    {
+        var buffer = (Span<byte>)stackalloc byte[maxBytesOnStack];
+        var written = encoding.GetBytes(stringToConvert, buffer);
+        var utf8Bytes = buffer[..written];
+        return HashData(utf8Bytes);
+    }
+    else
+    {
+        var utf8Bytes = encoding.GetBytes(stringToConvert);
+        return HashData(utf8Bytes);
+    }
+}
+
+Guid HashData(ReadOnlySpan<byte> bytes)
+{
+    var hashBytes = (Span<byte>)stackalloc byte[16];
+    var written = MD5.HashData(bytes, hashBytes);
+
+    return new Guid(hashBytes);
+}
+```
+
+#### References
+[Via Immo Landwerth (terrajobst)](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L11)
+
 ### Don't use async with large SqlClient data
 
 #### References
