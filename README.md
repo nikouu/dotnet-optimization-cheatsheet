@@ -256,6 +256,7 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [Use SIMD-accelerated numeric types](https://learn.microsoft.com/en-us/dotnet/standard/simd)
+[dotnet/runtime Vectorization Guidelines](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/vectorization-guidelines.md)
 
 ### Loop Alignment
 
