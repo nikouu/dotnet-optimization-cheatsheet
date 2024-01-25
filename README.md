@@ -132,6 +132,86 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 
 [GitHub repo it's used in](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L11)
 
+### High performance byte/char manipulation 1
+[Via David Fowler](https://twitter.com/davidfowl/status/1520966312817664000)
+
+```csharp
+// Choose a small stack threshold to avoid stack overflow
+const int stackAllocThreshold = 256;
+
+byte[]? pooled = null;
+
+// Either use stack memory or pooled memory
+Span<byte> span = bytesNeeded <= stackAllocThreshold
+    ? stackalloc byte[stackAllocThreshold]
+    : (pooled = ArrayPool<byte>.Shared.Rent(bytesNeeded);
+
+// Write to the span and process it
+var written = Populate(span);
+Process(span[..written]);
+
+// Return the pooled memory if we used it
+if (pooled is not null)
+{
+    ArrayPool<byte>.Shared.Return(pooled);
+}
+```
+Answer from [Miha Zupan](https://twitter.com/_MihaZupan/status/1521135981356896258) for why to use a flat 256 instead of the `bytesNeeded` for the stack allocation:
+> If you use SkipLocalsInit (perf sensitive code like this should and does), a constant size stackalloc is more efficient. It also means you don't have to explicitly guard against passing a negative value to the stackalloc.
+
+Answer to why 256 is used. You can also see [other places](https://grep.app/search?q=stackalloc&filter[lang][0]=C%23&filter[repo][0]=dotnet/runtime) it's used in .NET:
+> It's conservative to avoid stack overflows.
+
+### High performance byte/char manipulation 2
+[A more in-depth version via David Fowler](https://twitter.com/davidfowl/status/1521008356864843777/photo/1)
+
+```csharp
+using var memory = bytesNeeded <= 256
+    ? new StackOrPooledMemory(stackalloc byte[256])
+    : new StackOrPooledMemory(bytesNeeded);
+
+Span<byte> span = memory.Buffer;
+var written = Populate(span);
+Process(span[written..]);
+
+ref struct StackOrPooledMemory
+{
+    private readonly Span<byte> _span;
+    private byte[]? _arrayPooled;
+    
+    public StackOrPooledMemory(Span<byte> buffer)
+    {
+        _span = buffer;
+        _arrayPooled = null;
+    }
+
+    public StackOrPooledMemory(int size)
+    {
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        _arrayPooled = buffer;
+        _span = buffer;
+    }
+
+    public Span<byte> Buffer => _span;
+
+    public void Dispose()
+    {
+        if (_arrayPooled is not null)
+        {
+            var pooled = _arrayPooled;
+            _arrayPooled = null;
+            ArrayPool<byte>.Shared.Return(pooled);
+        }
+    }
+}
+```
+
+Answer from [David Fowler](https://twitter.com/davidfowl/status/1521011080373293056) as to why no try/finally:
+> We often skip that in high performance code, if the buffer doesn't go back to the pool because of exceptions, it'll get GCed.
+> 
+And [another note](https://twitter.com/davidfowl/status/1521127114124058626):
+> Try/finally prevents inlining
+
 ### Don't use async with large SqlClient data
 
 #### References
