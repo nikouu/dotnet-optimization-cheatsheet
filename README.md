@@ -342,6 +342,12 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 #### References
 [DevBlog Post](https://devblogs.microsoft.com/dotnet/loop-alignment-in-net-6/)
 
+### SkipLocalsInit
+
+#### References
+
+[Meziantou's Blog](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
+
 ## 🔴 Very Risky ☠
 🔥 Prod might go up in a spectacular ball of flame 🔥
 
