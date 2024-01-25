@@ -268,6 +268,12 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 [Meziantou's Blog](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
 
+### Inline Arrays
+
+#### References
+
+[David Fowler](https://twitter.com/davidfowl/status/1678190691841716224)
+
 ### High performance byte/char manipulation 1
 [Via David Fowler](https://twitter.com/davidfowl/status/1520966312817664000)
 
