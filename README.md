@@ -30,13 +30,9 @@ In the shortest way possible:
 1. Run tests
 1. Benchmark to see if it did improve what you expected
 
-To clarify some key concepts that keep coming back below in as short as possible (as each one can be it's own book):
-
-| Concept     | Synopsis                                                                                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Performance | Speed                                                                                                                                                                                                   |
-| Scalability | Throughput                                                                                                                                                                                              |
-| Allocations | Boils down to both "needlessly shifting bits around" and "work the garbage collector need to do". The GC stops our code entirely when cleaning up so if we can relieve pressure. We can also stop inefficient copying of objects around in memory. |
+We're looking at the following:
+1. Making items/second go up and/or
+2. Allocations go down
 
 By the way, the risk ratings are arbitrary 🤷‍♀️
 
