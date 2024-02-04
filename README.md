@@ -2,7 +2,7 @@
 
 # Still under construction 🏗️
 
-Practical neato performance/speed/"hacks"/good practices for .NET I've collected over time. Like bypassing safeties in your car and ripping out the seats to make it go faster, some of these come with a ⚠**RISK**⚠. This means you should understand your own scenario and what the relevant risks are. 
+Practical neato performance/speed/"hacks"/good practices for .NET I've collected over time. Like bypassing safeties in your car and ripping out the seats to make it go faster, some of these come with a ⚠**RISK**⚠. You are here to have a reference of what is possible, this means you should understand your own scenario and what the relevant risks are. 
 
 So let's just call these *educational*. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
 
@@ -128,6 +128,8 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 
 [GitHub repo it's used in](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L11)
 
+[My project with benchmarks against variations](https://github.com/nikouu/String-to-GUID-Dotnet-Benchmarking)
+
 ### Don't use async with large SqlClient data
 
 #### References
@@ -143,7 +145,19 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 
 [Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
 
-### Faster loops
+### Faster loops with Array and Span<T>
+
+```csharp
+var items = new int[] { 1, 2, 3, 4, 5 };
+var span = items.AsSpan();
+
+for (int i = 0; i < span.Length; i++)
+{
+    Console.WriteLine(span[i]);
+}
+```
+
+Don't mutate the collection during looping.
 
 ### ThreadPool
 
@@ -188,6 +202,28 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 ## 🟡 A Little Risky 🤔
 All the usual .NET safeties are included, however you may need to have a deeper understanding of the topic to not run into trouble in order to successfully use them.
 
+### Faster loops with List and Span<T>
+
+```csharp
+var numbers = new List<int> { 1, 2, 3, 4, 5 };
+var span = CollectionsMarshal.AsSpan(numbers);
+
+for (int i = 0; i < span.Length; i++)
+{
+    Console.WriteLine(span[i]);
+}
+```
+
+If the collection is mutated during looping, no error will be thrown. Be careful.
+
+If a `Span` isn't viable, you can create your own enumerator with `ref` and `readonly` keywords. Information can be found at [Unusual optimizations; ref foreach and ref returns](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html) by Marc Gravell.
+
+#### References
+
+[The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
+
+[CollectionsMarshal.AsSpan<T> Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal.asspan?view=net-8.0)
+
 ### Parallel ForEach
 
 #### References
@@ -219,6 +255,9 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 ### HttpClient
 
 #### References
+
+[Updated benchmarking comparisons using `HttpClient`](https://github.com/nikouu/HttpClientBenchmarking)
+
 [Efficiently Streaming Large HTTP Responses With HttpClient - Tugberk Ugurlu](https://www.tugberkugurlu.com/archive/efficiently-streaming-large-http-responses-with-httpclient)
 
 [Streaming with New .NET HttpClient and HttpCompletionOption.ResponseHeadersRead - Tugberk Ugurlu](https://www.tugberkugurlu.com/archive/streaming-with-newnet-httpclient-and-httpcompletionoption-responseheadersread)
@@ -356,17 +395,44 @@ And [another note](https://twitter.com/davidfowl/status/1521127114124058626):
 
 ![](images/mad-max-fireball.gif)
 
+
 ### Even faster loops
+
+```csharp
+var items = new List<int> { 1, 2, 3, 4, 5 };
+var span = CollectionsMarshal.AsSpan(items);
+ref var searchSpace = ref MemoryMarshal.GetReference(span);
+
+for (int i = 0; i < span.Length; i++)
+{
+    var item = Unsafe.Add(ref searchSpace, i);
+    Console.WriteLine(item);
+}
+```
 
 #### References
 [The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
 
-[Unusual optimizations; ref foreach and ref returns - Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html)
+[MemoryMarshal.GetReference Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.getreference?view=net-8.0)
+
+[Unsafe.Add Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.add?view=net-8.0)
 
 ### Even even faster loops
 
+```csharp
+ref var start = ref MemoryMarshal.GetArrayDataReference(items);
+ref var end = ref Unsafe.Add(ref start, items.Length);
+
+while(Unsafe.IsAddressLessThan(ref start, ref end)){
+    Console.WriteLine(start);
+    start = ref Unsafe.Add(ref start, 1);
+}
+```
+
+Don't mutate the collection during looping.
+
 #### References
-[I Lied! The Fastest C# Loop Is Even Weirder - Nick Chapsas](https://www.youtube.com/watch?v=KLtMtxUihBk) (Nick, how do you keep finding these)
+[I Lied! The Fastest C# Loop Is Even Weirder - Nick Chapsas](https://www.youtube.com/watch?v=KLtMtxUihBk) (Nick, how do you keep finding these?)
 
 ### Unsafe
 
