@@ -395,6 +395,7 @@ And [another note](https://twitter.com/davidfowl/status/1521127114124058626):
 
 ![](images/mad-max-fireball.gif)
 
+☠ These also might be detrimental to the health of your codebase, colleagues, and mental fortitude. They could be antipatterns, malpractice, or just overall disgusting. If you think these are good ideas for your codebase, stop and think: *are they really?* Because they're probably not. ☠
 
 ### Even faster loops
 
@@ -449,3 +450,8 @@ Don't mutate the collection during looping.
 
 #### References
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
+
+### Loop Unrolling
+
+#### References
+["Don't Use Loops, They Are Slow! Do This Instead" | Code Cop #010 - Nick Chapsas](https://www.youtube.com/watch?v=tllygkj0czw)
