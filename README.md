@@ -4,7 +4,11 @@
 
 Practical neato performance/speed/"hacks"/good practices for .NET I've collected over time. Like bypassing safeties in your car and ripping out the seats to make it go faster, some of these come with a ⚠**RISK**⚠. You are here to have a reference of what is possible, this means you should understand your own scenario and what the relevant risks are. 
 
-So let's just call these *educational*. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
+Donald Knuth said:
+
+>Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
+
+So let's just call these *educational* for that 3%. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
 
 This is different from my [Optimization-Tools-And-Notes](https://github.com/nikouu/Optimization-Tools-And-Notes) repo as that is mostly tools for performance, and this is mostly code to help understand and make performance better.
 
