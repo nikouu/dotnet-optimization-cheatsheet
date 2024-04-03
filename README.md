@@ -10,6 +10,8 @@ Donald Knuth said:
 
 So let's just call these *educational* for that 3%. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
 
+You might also need to consider: if a microbenchmark for function A is 2ms faster than function B, but function B does no allocations, which to pick? 
+
 This is different from my [Optimization-Tools-And-Notes](https://github.com/nikouu/Optimization-Tools-And-Notes) repo as that is mostly tools for performance, and this is mostly code to help understand and make performance better.
 
 ## ‼ Read This First ‼
