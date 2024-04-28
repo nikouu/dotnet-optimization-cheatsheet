@@ -396,6 +396,27 @@ Answer from [David Fowler](https://twitter.com/davidfowl/status/1521011080373293
 And [another note](https://twitter.com/davidfowl/status/1521127114124058626):
 > Try/finally prevents inlining
 
+### Ref fields
+
+For more complex data structures, having your deep down property as a ref could improve speed.
+
+```csharp
+public struct D
+{
+    public int Field;
+
+    [UnscopedRef]
+    public ref int ByRefField => ref Field;
+}
+
+```
+
+#### Refereces
+[Via Konrad Kokosa](https://twitter.com/konradkokosa/status/1729908112960667991)
+
+[Gist via Konrad Kokosa](https://gist.github.com/kkokosa/b13b4ada81dc77d2f79eaf05b9f87d37)
+
+
 ## 🔴 Very Risky ☠
 🔥 Prod might go up in a spectacular ball of flame 🔥
 
