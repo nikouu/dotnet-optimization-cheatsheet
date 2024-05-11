@@ -1,3 +1,10 @@
+- add inline arrays
+- rewrite with better preamble around optimisation
+- add table of contents for the different levels
+- string.create
+- closures
+- links to resources 
+
 # Dotnet Optimization Cheatsheet
 
 # Still under construction 🏗️
