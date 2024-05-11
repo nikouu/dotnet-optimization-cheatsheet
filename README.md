@@ -3,7 +3,8 @@
 - add table of contents for the different levels
 - string.create
 - closures
-- links to resources 
+- links to resources
+- suggestions on what to optimise first such as architecture, adding more hardware
 
 # Dotnet Optimization Cheatsheet
 
