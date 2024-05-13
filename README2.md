@@ -4,7 +4,7 @@ Donald Knuth said:
 
 >Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
 
-If you're the 3%, this is an educational look at .NET performance tricks I've gathered over time. By reading this I assume you understand that architecture, data flow, general performance decisions, etc have a far larger impact to your codebase than optimising for single digit milliseconds or nanoseconds. 
+If you're the 3%, this is an educational look at .NET performance tricks I've gathered over time. By reading this I assume you understand that architecture, data flow, general performance decisions, hardware, etc have a far larger impact to your codebase than optimising for single digit milliseconds or nanoseconds. 
 
 You'll need to consider:
 1. Will I be pre-maturely optimising?
@@ -14,11 +14,11 @@ You'll need to consider:
 
 I've rated each optimisation here in terms of difficulty. You may gauge the difficulties differently. 
 
-| Difficulty       | Reasoning                                                                                                        |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| 🟢 Easy         | These are either well known, or simple to drop into existing code with only some knowledge.                      |
-| 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use.                    |
-| 🔴 Advanced     | Implementation and caveat understanding is critical to prevent app crashes or accidentally reducing performance. |
+| Difficulty       | Reasoning                                                                                                                                                                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🟢 Easy         | These are either well known, or simple to drop into existing code with only some knowledge.                                                                                                                                               |
+| 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use. I won't explain all the caveats, but you'll have knowledge that there may need to be some reasearch on something you need to watch out for. |
+| 🔴 Advanced     | Implementation and caveat understanding is critical to prevent app crashes or accidentally reducing performance.                                                                                                                          |
 
 .NET is always evolving. Some of these may be invalid in the future due to breaking changes or they've been baked into the framework under the hood. 
 
@@ -125,8 +125,98 @@ Console.WriteLine(stringBuilder.ToString());
 
 There is a long time open [dotnet GitHub issue](https://github.com/dotnet/SqlClient/issues/593) where larger returned query data takes a lot longer with async compared to sync.
 
-### 🟡 `async`
+### 🟡 Async
 
 [Official Guide](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
 
+Asynchronous programming allows us to continue with other tasks while waiting for I/O bound calls or expensive computations. In .NET we use the `async` and `await` keywords. There's too much to cover for this documentation, but once you get used to it, it's easy enough to use daily.
 
+The user needs to ensure they put the `await` keyword in for an async method call.
+
+```csharp
+public async Task<string> GetFileContentsAsync(string path)
+{
+	return await File.ReadAllTextAsync(path);
+}
+```
+
+### 🟡 `Parallel.ForEach()`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreach)
+
+[Official Guide](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-write-a-simple-parallel-foreach-loop)
+
+`Parallel.ForEach()` works like executing a `foreach` loop in parallel. Best used if you have lots of independent CPU bound work.
+
+Be wary of threading and concurrency issues.
+
+There is also [`Parallel.ForEachAsync()`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreachasync).
+
+```csharp
+List<Image> images = GetImages();
+
+Parallel.ForEach(images, (image) => {
+	var resizedImage = ResizeImage(image);
+	SaveImage(image);
+});
+```
+
+### 🟡 `Span<T>`, `ReadOnlySpan<T>`, `Memory<T>`
+
+[`Span<T>` Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.span-1)
+
+[`ReadOnlySpan<T>` Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.readonlyspan-1)
+
+[`Memory<T>` Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.memory-1)
+
+[`Memory<T>` and `Span<T>` usage guidelines](https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines)
+
+[Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
+
+All three of these "represent an arbitrary contiguous region of memory". Another way it's commonly explained is these can be thought of as a window into the memory. 
+
+For our short purposes here, the performance gains are via low level reading and manipulation of data without copying or allocating. We use them with arrays, strings, and more niche data situations.
+
+There are caveats such as `Span` types only being put on the stack, meaning they can't be used inside async calls (which is what `Memory<T>` allows for). 
+
+```csharp
+int[] items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+// Technically we can use the slicing overload of AsSpan() as well
+var span = items.AsSpan();
+var slice = span.Slice(1, 5); // 1, 2, 3, 4, 5
+```
+
+### 🟡 Faster loops with `Span<T>` and `ReadOnlySpan<T>`
+
+[The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
+
+[Improve C# code performance with Span<T> via NDepend blog](https://blog.ndepend.com/improve-c-code-performance-with-spant/)
+
+Don't mutate the collection during looping.
+
+For arrays and strings, we can use `AsSpan()`.
+
+```csharp
+int[] items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+var span = items.AsSpan();
+
+for (int i = 0; i < span.Length; i++)
+{
+    Console.WriteLine(span[i]);
+}
+```
+
+However for lists we need to use [`CollectionsMarshal.AsSpan()`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal.asspan)
+
+```csharp
+List<int> items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+var span = CollectionsMarshal.AsSpan(items);
+
+for (int i = 0; i < span.Length; i++)
+{
+    Console.WriteLine(span[i]);
+}
+```	
+
+If a `Span<T>` isn't viable, you can create your own enumerator with `ref` and `readonly` keywords. Information can be found at [Unusual optimizations; ref foreach and ref returns by Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html).

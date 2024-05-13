@@ -55,49 +55,7 @@ Oh and later .NET versions might render some of these invalid. For instance stri
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-### Use less value nullable types
-[Nullable value types are boxed](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#boxing-and-unboxing) meaning there is unboxing work and null checking work happening. 
 
-```csharp
-int? Slow(int? x, int? y) {
-	int? sum = 0;
-	for (int i = 0; i < 1000; i++){
-		sum += x * y;
-	}
-	return sum;
-}
-```
-
-vs
-
-```csharp
-int? Fast(int x, int y) {
-	int? sum = 0;
-	for (int i = 0; i < 1000; i++){
-		sum += x * y;
-	}
-	return sum;
-}
-```
-
-#### References
-[Tweet via Bartosz Adamczewski with infographics and explainers](https://twitter.com/badamczewski01/status/1542799681717149697)
-
-### Use String.Compare()
-`String.Compare()` is a memory efficient way to compare strings. This is in respect to the memory inefficient method of comparing by doing `stringA.ToLower() == stringB.ToLower()` - which due to strings being immutable, has to create a new string for each `.ToLower()` call.
-
-```csharp
-var result = String.Compare("StringA", "StringB", StringComparison.OrdinalIgnoreCase);
-```
-
-Note: It's recommended to use the overload of [`Compare(String, String, StringComparison)`](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare?view=netcore-3.1#system-string-compare(system-string-system-string-system-stringcomparison)) rather than `Compare(String, String)` as via the documentation: 
-
-> When comparing strings, you should call the Compare(String, String, StringComparison) method, which requires that you explicitly specify the type of string comparison that the method uses. For more information, see Best Practices for Using Strings.
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare?view=netcore-3.1)
-
-[Twitter post via Daniel Lawson](https://twitter.com/danylaws/status/1504381170347294727)
 
 ### String to GUID
 
@@ -144,34 +102,8 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 
 [My project with benchmarks against variations](https://github.com/nikouu/String-to-GUID-Dotnet-Benchmarking)
 
-### Don't use async with large SqlClient data
-
-#### References
-[dotnet GitHub issue](https://github.com/dotnet/SqlClient/issues/593)
 
 
-### Span<T>, Memory<T>
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-7.0)
-
-[Memory<T> and Span<T> usage guidelines](https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines)
-
-[Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
-
-### Faster loops with Array and Span<T>
-
-```csharp
-var items = new int[] { 1, 2, 3, 4, 5 };
-var span = items.AsSpan();
-
-for (int i = 0; i < span.Length; i++)
-{
-    Console.WriteLine(span[i]);
-}
-```
-
-Don't mutate the collection during looping.
 
 ### ThreadPool
 
@@ -208,47 +140,10 @@ Don't mutate the collection during looping.
 #### References
 [.NET Performance Tips - Boxing and Unboxing](https://learn.microsoft.com/en-us/dotnet/framework/performance/performance-tips#boxing-and-unboxing)
 
-### Use StringBuilder for larger strings
-
-#### References
-[.NET Performance Tips - Strings](https://learn.microsoft.com/en-us/dotnet/framework/performance/performance-tips#strings)
 
 ## 🟡 A Little Risky 🤔
 All the usual .NET safeties are included, however you may need to have a deeper understanding of the topic to not run into trouble in order to successfully use them.
 
-### Faster loops with List and Span<T>
-
-```csharp
-var numbers = new List<int> { 1, 2, 3, 4, 5 };
-var span = CollectionsMarshal.AsSpan(numbers);
-
-for (int i = 0; i < span.Length; i++)
-{
-    Console.WriteLine(span[i]);
-}
-```
-
-If the collection is mutated during looping, no error will be thrown. Be careful.
-
-If a `Span` isn't viable, you can create your own enumerator with `ref` and `readonly` keywords. Information can be found at [Unusual optimizations; ref foreach and ref returns](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html) by Marc Gravell.
-
-#### References
-
-[The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
-
-[CollectionsMarshal.AsSpan<T> Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal.asspan?view=net-8.0)
-
-### Parallel ForEach
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreachasync?view=net-7.0)
-
-[Official Guide](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-write-a-simple-parallel-foreach-loop)
-
-### Async
-
-#### References
-[Official Guide](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
 
 ### ValueTask
 
