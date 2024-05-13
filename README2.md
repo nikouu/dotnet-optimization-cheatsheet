@@ -17,7 +17,7 @@ I've rated each optimisation here in terms of difficulty. You may gauge the diff
 | Difficulty       | Reasoning                                                                                                                                                                                                                                 |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 🟢 Easy         | These are either well known, or simple to drop into existing code with only some knowledge.                                                                                                                                               |
-| 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use. I won't explain all the caveats, but you'll have knowledge that there may need to be some reasearch on something you need to watch out for. |
+| 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use. <br> I won't explain all the caveats, but you'll have knowledge that there may need to be some reasearch on something you need to watch out for. |
 | 🔴 Advanced     | Implementation and caveat understanding is critical to prevent app crashes or accidentally reducing performance.                                                                                                                          |
 
 .NET is always evolving. Some of these may be invalid in the future due to breaking changes or they've been baked into the framework under the hood. 
@@ -125,6 +125,36 @@ Console.WriteLine(stringBuilder.ToString());
 
 There is a long time open [dotnet GitHub issue](https://github.com/dotnet/SqlClient/issues/593) where larger returned query data takes a lot longer with async compared to sync.
 
+### 🟢 Use streams with `HttpClient`
+
+[Performance Improvements in .NET 8 by Stephen Toub](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
+
+[HttpClient benchmarking via Niko Uusitalo](https://github.com/nikouu/HttpClientBenchmarking)
+
+If we work with streams out of `HttpClient` we can eliminate a lot of memory copies. 
+
+The following example assumes the response is a JSON string:
+
+```csharp
+public async Task GetStreamAsync()
+{
+    using var stream = await _httpClient.GetStreamAsync(_url);
+
+    var data = await JsonSerializer.DeserializeAsync<List<WeatherForecast>>(stream);
+}
+```
+
+In fact, this is such a common operation that we have a stream convenience overload for JSON:
+
+```csharp
+public async Task GetFromJsonAsync()
+{
+    var data = await _httpClient.GetFromJsonAsync<List<WeatherForecast>>(_url);
+}
+```
+
+These two examples above eliminate copying the response from the stream to a JSON string then the JSON string into our objects. 
+
 ### 🟡 Async
 
 [Official Guide](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
@@ -220,3 +250,22 @@ for (int i = 0; i < span.Length; i++)
 ```	
 
 If a `Span<T>` isn't viable, you can create your own enumerator with `ref` and `readonly` keywords. Information can be found at [Unusual optimizations; ref foreach and ref returns by Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html).
+
+### 🔴 `SkipLocalsInit`
+
+[C# 9 - Improving performance using the SkipLocalsInit attribute by Gérald Barré](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
+
+[Feature spec](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-9.0/skip-localsinit)
+
+[Feature design for SkipLocalsInit](https://github.com/dotnet/roslyn/blob/main/docs/features/skiplocalsinit.md)
+
+By default the CLR forces the JIT to set all local variabls to their default value meaning your variable won't be some leftover value from memory. In high performance situations, this may become noticeable and we can skip this initialization as long as we understand the risk being taken on.
+
+```csharp
+[SkipLocalsInit]
+byte SkipInitLocals()
+{
+    Span<byte> s = stackalloc byte[10];
+    return s[0];
+}
+```

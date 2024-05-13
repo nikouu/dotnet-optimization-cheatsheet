@@ -5,6 +5,7 @@
 - closures
 - links to resources
 - suggestions on what to optimise first such as architecture, adding more hardware
+- go back and fix up the tabs and spaces
 
 # Dotnet Optimization Cheatsheet
 
@@ -161,17 +162,6 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 [Workstation and server garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
 
-### HttpClient
-
-#### References
-
-[Updated benchmarking comparisons using `HttpClient`](https://github.com/nikouu/HttpClientBenchmarking)
-
-[Efficiently Streaming Large HTTP Responses With HttpClient - Tugberk Ugurlu](https://www.tugberkugurlu.com/archive/efficiently-streaming-large-http-responses-with-httpclient)
-
-[Streaming with New .NET HttpClient and HttpCompletionOption.ResponseHeadersRead - Tugberk Ugurlu](https://www.tugberkugurlu.com/archive/streaming-with-newnet-httpclient-and-httpcompletionoption-responseheadersread)
-
-[Efficient api calls with HttpClient and JSON.NET - John Thiriet](https://johnthiriet.com/efficient-api-calls/)
 
 ### Struct
 
@@ -207,11 +197,6 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 #### References
 [DevBlog Post](https://devblogs.microsoft.com/dotnet/loop-alignment-in-net-6/)
 
-### SkipLocalsInit
-
-#### References
-
-[Meziantou's Blog](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
 
 ### Inline Arrays
 
