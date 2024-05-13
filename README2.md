@@ -17,7 +17,7 @@ I've rated each optimisation here in terms of difficulty. You may gauge the diff
 | Difficulty       | Reasoning                                                                                                                                                                                                                                 |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 🟢 Easy         | These are either well known, or simple to drop into existing code with only some knowledge.                                                                                                                                               |
-| 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use. <br> I won't explain all the caveats, but you'll have knowledge that there may need to be some reasearch on something you need to watch out for. |
+| 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use. Own research is advised. |
 | 🔴 Advanced     | Implementation and caveat understanding is critical to prevent app crashes or accidentally reducing performance.                                                                                                                          |
 
 .NET is always evolving. Some of these may be invalid in the future due to breaking changes or they've been baked into the framework under the hood. 
