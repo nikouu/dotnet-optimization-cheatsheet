@@ -6,6 +6,7 @@
 - links to resources
 - suggestions on what to optimise first such as architecture, adding more hardware
 - go back and fix up the tabs and spaces
+- refs for structs
 
 # Dotnet Optimization Cheatsheet
 
@@ -146,15 +147,6 @@ Guid HashData(ReadOnlySpan<byte> bytes)
 All the usual .NET safeties are included, however you may need to have a deeper understanding of the topic to not run into trouble in order to successfully use them.
 
 
-### ValueTask
-
-#### ManualResetValueTaskSourceCore
-
-#### References
-[Official DevBlog](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/)
-
-[Official Documentation for ManualResetValueTaskSourceCore](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.sources.manualresetvaluetasksourcecore-1?view=net-7.0)
-
 ### Garbage Collection
 
 #### References
@@ -162,20 +154,6 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 [Workstation and server garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
 
-
-### Struct
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
-
-### Overriding GetHashCode() and Equals for Structs
-
-#### References
-[Official DevBlog](https://devblogs.microsoft.com/premier-developer/performance-implications-of-default-struct-equality-in-c/)
-
-[Jon Skeet SO answer](https://stackoverflow.com/a/263416)
-
-[Struct equality performance in .NET - Gérald Barré](https://www.meziantou.net/struct-equality-performance-in-dotnet.htm)
 
 ### AOT
 
@@ -283,26 +261,6 @@ Answer from [David Fowler](https://twitter.com/davidfowl/status/1521011080373293
 > 
 And [another note](https://twitter.com/davidfowl/status/1521127114124058626):
 > Try/finally prevents inlining
-
-### Ref fields
-
-For more complex data structures, having your deep down property as a ref could improve speed.
-
-```csharp
-public struct D
-{
-    public int Field;
-
-    [UnscopedRef]
-    public ref int ByRefField => ref Field;
-}
-
-```
-
-#### Refereces
-[Via Konrad Kokosa](https://twitter.com/konradkokosa/status/1729908112960667991)
-
-[Gist via Konrad Kokosa](https://gist.github.com/kkokosa/b13b4ada81dc77d2f79eaf05b9f87d37)
 
 
 ## 🔴 Very Risky ☠

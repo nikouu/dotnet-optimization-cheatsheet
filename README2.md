@@ -38,11 +38,13 @@ If you're looking for tools to help, I have: [Optimization-Tools-And-Notes](http
 
 ## Further Resources
 
-| Resource                                                                                                               | Description                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                             |
-| [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md) | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0) |
-|                                                                                                                        |                                                                                                  |
+| Resource                                                                                                                                                                      | Description                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                                                                       | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                             |
+| [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md)                                                        | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0) |
+| [Classes vs. Structs. How not to teach about performance!](https://sergeyteplyakov.github.io/Blog/benchmarking/2023/11/02/Performance_Comparison_For_Classes_vs_Structs.html) | A critique of bad benchmarking by [Sergiy Teplyakov](https://sergeyteplyakov.github.io/Blog/)    |
+| [Diagrams of .NET internals](https://goodies.dotnetos.org/)                                                                                                      | In depth diagrams from the [Dotnetos courses](https://dotnetos.org/products/)                    |
+|                                                                                                                                                                               |                                                                                                  |
 
 ## Optimisations
 
@@ -170,6 +172,55 @@ public async Task<string> GetFileContentsAsync(string path)
 }
 ```
 
+### 🟡 `ValueTask`
+
+[Official DevBlog by Stephen Toub](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/)
+
+[Official Documentation for ManualResetValueTaskSourceCore](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.sources.manualresetvaluetasksourcecore-1)
+
+`Task`s are very flexible to suit the varied needs asked of them. However, a lot of use cases of `Task` are simple single awaits and it may also be the case that during high throughput code there could be a performance hit of the allocations from `Task`. To solve these problems we have `ValueTask` which allocates less than `Task`. However there are caveats with the less flexibility compared to `Task` such as you shouldn't await a `ValueTask` more than once. 
+
+```csharp
+var result = await GetValue();
+
+
+public ValueTask<int> GetValue()
+{
+	// implementation omitted
+	return value;
+}
+```
+
+### 🟡 Structs
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
+
+[Class vs Struct in C#: Making Informed Choices via NDepend blog](https://blog.ndepend.com/class-vs-struct-in-c-making-informed-choices/)
+
+[Value vs Reference type allocation locations via Konrad Kokosa](https://twitter.com/konradkokosa/status/1432622993390424064)
+
+There are times when structs may help us with performance compared to a class. Structs are lighter than classes and _often_ end up on the stack meaning no allocations for the GC to deal with. It's better to use them in place of simple objects.
+
+However, there are a few caveats here including the size and complexity of the struct, nullability, and no inheritance.
+
+```csharp
+var coordinates = new Coords(0, 0);
+
+public struct Coords
+{
+    public Coords(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public double X { get; }
+    public double Y { get; }
+
+    public override string ToString() => $"({X}, {Y})";
+}
+```
+
 ### 🟡 `Parallel.ForEach()`
 
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreach)
@@ -267,5 +318,54 @@ byte SkipInitLocals()
 {
     Span<byte> s = stackalloc byte[10];
     return s[0];
+}
+```
+
+### 🔴 Ref fields (with `UnscopedRef`)
+
+[Twitter post via Konrad Kokosa](https://twitter.com/konradkokosa/status/1729908112960667991)
+
+[Gist via Konrad Kokosa](https://gist.github.com/kkokosa/b13b4ada81dc77d2f79eaf05b9f87d37)
+
+[Low Level Struct Improvements proposal](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-11.0/low-level-struct-improvements#parameter-scope-variance)
+
+[UnscopedRefAttribute documentation](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.unscopedrefattribute)
+
+For more complex data structures, having your deep down property as a ref could improve speed.
+
+```csharp
+public struct D
+{
+    public int Field;
+
+    [UnscopedRef]
+    public ref int ByRefField => ref Field;
+}
+
+```
+
+### 🔴 Overriding `GetHashCode()` and `Equals` for Structs
+
+[Official DevBlog](https://devblogs.microsoft.com/premier-developer/performance-implications-of-default-struct-equality-in-c/)
+
+[Jon Skeet SO answer](https://stackoverflow.com/a/263416)
+
+[Struct equality performance in .NET - Gérald Barré](https://www.meziantou.net/struct-equality-performance-in-dotnet.htm)
+
+The default value type implementation of `GetHashCode()` trades speed for a good hash distribution across any given value type - useful for dictionary and hashset types. This happens by reflection, which is incredibly slow when looking through our micro-optimization lens.
+
+An example from the Jon Skeet answer above of overriding:
+```csharp
+public override int GetHashCode()
+{
+    unchecked // Overflow is fine, just wrap
+    {
+        int hash = (int) 2166136261;
+        // Suitable nullity checks etc, of course :)
+        hash = (hash * 16777619) ^ field1.GetHashCode();
+        hash = (hash * 16777619) ^ field2.GetHashCode();
+        hash = (hash * 16777619) ^ field3.GetHashCode();
+        return hash;
+    }
 }
 ```
