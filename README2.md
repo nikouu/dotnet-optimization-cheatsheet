@@ -1,6 +1,6 @@
 # Dotnet Optimization Cheatsheet
 
-Donald Knuth said:
+[Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth):
 
 >Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
 
@@ -38,13 +38,14 @@ If you're looking for tools to help, I have: [Optimization-Tools-And-Notes](http
 
 ## Further Resources
 
-| Resource                                                                                                                                                                      | Description                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                                                                       | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                             |
-| [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md)                                                        | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0) |
-| [Classes vs. Structs. How not to teach about performance!](https://sergeyteplyakov.github.io/Blog/benchmarking/2023/11/02/Performance_Comparison_For_Classes_vs_Structs.html) | A critique of bad benchmarking by [Sergiy Teplyakov](https://sergeyteplyakov.github.io/Blog/)    |
-| [Diagrams of .NET internals](https://goodies.dotnetos.org/)                                                                                                      | In depth diagrams from the [Dotnetos courses](https://dotnetos.org/products/)                    |
-|                                                                                                                                                                               |                                                                                                  |
+| Resource                                                                                                                                                                      | Description                                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                                                                       | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                                                   |
+| [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md)                                                        | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0)                       |
+| [Classes vs. Structs. How not to teach about performance!](https://sergeyteplyakov.github.io/Blog/benchmarking/2023/11/02/Performance_Comparison_For_Classes_vs_Structs.html) | A critique of bad benchmarking by [Sergiy Teplyakov](https://sergeyteplyakov.github.io/Blog/)                          |
+| [Diagrams of .NET internals](https://goodies.dotnetos.org/)                                                                                                                   | In depth diagrams from the [Dotnetos courses](https://dotnetos.org/products/)                                          |
+| [Turbocharged: Writing High-Performance C# and .NET Code](https://www.youtube.com/watch?v=CwISe8blq38)                                                                        | A great video describing multiple ways to improve performance by [Steve Gordon](https://www.stevejgordon.co.uk/)       |
+| [Performance tricks I learned from contributing to open source .NET packages](https://www.youtube.com/watch?v=pGgsFW7kDKI)                                                    | A great video describing multiple ways to sqeeze out performance by [Daniel Marbach](https://github.com/danielmarbach) |
 
 ## Optimisations
 
@@ -368,4 +369,45 @@ public override int GetHashCode()
         return hash;
     }
 }
+```
+
+### 🔴 Fastest Loops
+
+[I Lied! The Fastest C# Loop Is Even Weirder - Nick Chapsas](https://www.youtube.com/watch?v=KLtMtxUihBk)
+
+With this we've mostly removed the safety .NET provides us in exchange for speed. It is also difficult to understand at a glance without being familiar with `MemoryMarshal` methods.
+
+Don't mutate the collection during looping.
+
+```csharp
+ref var start = ref MemoryMarshal.GetArrayDataReference(items);
+ref var end = ref Unsafe.Add(ref start, items.Length);
+
+while(Unsafe.IsAddressLessThan(ref start, ref end)){
+    Console.WriteLine(start);
+    start = ref Unsafe.Add(ref start, 1);
+}
+```
+
+### 🔴 Removing Closures
+
+[How we achieved 5X faster pipeline execution by removing closure allocations by Daniel Marbach](https://particular.net/blog/pipeline-and-closure-allocations)
+
+[Dissecting the local functions in C# 7 by Sergey Tepliakov](https://devblogs.microsoft.com/premier-developer/dissecting-the-local-functions-in-c-7/)
+
+[StackOverflow question on closures](https://stackoverflow.com/questions/595482/what-are-closures-in-c)
+
+In-line delegates and anonymous methods that capture parental variables give us closure allocations. A new object is allocated to hold the value from the parent for the anonymous method.
+
+We have a few options including, but not limited to:
+1. If using LINQ, moving that code into a regular loop instead
+1. Static lambdas ([lambdas are anonymous functions](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions)) that accept state
+	1. Further helpful if the static lambda is generic to removing boxing
+
+Example via the above link by Daniel Marbach:
+```csharp
+static void MyFunction<T>(Action<T> action, T state) => action(state);
+
+int myNumber = 42;
+MyFunction(static number => Console.WriteLine(number), myNumber);
 ```

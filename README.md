@@ -2,107 +2,16 @@
 - rewrite with better preamble around optimisation
 - add table of contents for the different levels
 - string.create
-- closures
-- links to resources
 - suggestions on what to optimise first such as architecture, adding more hardware
 - go back and fix up the tabs and spaces
 - refs for structs
 
 # Dotnet Optimization Cheatsheet
 
-# Still under construction 🏗️
-
-Practical neato performance/speed/"hacks"/good practices for .NET I've collected over time. Like bypassing safeties in your car and ripping out the seats to make it go faster, some of these come with a ⚠**RISK**⚠. You are here to have a reference of what is possible, this means you should understand your own scenario and what the relevant risks are. 
-
-Donald Knuth said:
-
->Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
-
-So let's just call these *educational* for that 3%. Each item is fully referenced so you can educate yourself too. Oh and they're mostly about language features over things like what should be existing good coding practices and architecture.
-
-You might also need to consider: if a microbenchmark for function A is 2ms faster than function B, but function B does no allocations, which to pick? 
-
-This is different from my [Optimization-Tools-And-Notes](https://github.com/nikouu/Optimization-Tools-And-Notes) repo as that is mostly tools for performance, and this is mostly code to help understand and make performance better.
-
-## ‼ Read This First ‼
-
-> [_We always want our code to "run faster". But rarely do we ask – what is it running from?_](https://twitter.com/moyix/status/1449397749343047681)
-
-1. Try not to pre-maturely optimise
-1. Understand the risks involved
-1. Is the time spent doing this worth it?
-
-This readme is giving you the tools. It's up to you to understand how and where to use them. 
-
-*Or don't, I'm not gonna tell you how to live your life.*
-
-## Starting Optimizing
-
-In the shortest way possible:
-
-1. Write unit tests so you have a baseline for your functionality
-1. Use something like [BenchmarkDotNet](https://benchmarkdotnet.org/) or the [Performance Profiler](https://learn.microsoft.com/en-us/visualstudio/profiling/?view=vs-2022) in Visual Studio to get a before performance baseline
-1. Write your change
-1. Run tests
-1. Benchmark to see if it did improve what you expected
-
-We're looking at the following:
-1. Making items/second go up and/or
-2. Allocations go down
-
-By the way, the risk ratings are arbitrary 🤷‍♀️
-
-Oh and later .NET versions might render some of these invalid. For instance string interpolation used to be a tad slow, but had [a big performance glow up in .NET 6](https://devblogs.microsoft.com/dotnet/string-interpolation-in-c-10-and-net-6/).
 
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-
-
-### String to GUID
-
-Tries to make the conversion from string to GUID without allocation. However, according to the Twitter replies (see references below) there are more ways to improve this by:
-- Moving off MD5
-- Using UTF16
-- Using `MemoryMarshal.AsBytes` instead of the UTF8 work
-
-```csharp
-Guid ComputeGuid(string stringToConvert)
-{
-    const int maxBytesOnStack = 256;
-
-    var encoding = Encoding.UTF8;
-    var maxByteCount = encoding.GetMaxByteCount(stringToConvert.Length);
-
-    if (maxByteCount <= maxBytesOnStack)
-    {
-        var buffer = (Span<byte>)stackalloc byte[maxBytesOnStack];
-        var written = encoding.GetBytes(stringToConvert, buffer);
-        var utf8Bytes = buffer[..written];
-        return HashData(utf8Bytes);
-    }
-    else
-    {
-        var utf8Bytes = encoding.GetBytes(stringToConvert);
-        return HashData(utf8Bytes);
-    }
-}
-
-Guid HashData(ReadOnlySpan<byte> bytes)
-{
-    var hashBytes = (Span<byte>)stackalloc byte[16];
-    var written = MD5.HashData(bytes, hashBytes);
-
-    return new Guid(hashBytes);
-}
-```
-
-#### References
-[Via Immo Landwerth (terrajobst)](https://twitter.com/terrajobst/status/1507808952146223106)
-
-[GitHub repo it's used in](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L11)
-
-[My project with benchmarks against variations](https://github.com/nikouu/String-to-GUID-Dotnet-Benchmarking)
 
 
 
@@ -182,85 +91,9 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 [David Fowler](https://twitter.com/davidfowl/status/1678190691841716224)
 
-### High performance byte/char manipulation 1
-[Via David Fowler](https://twitter.com/davidfowl/status/1520966312817664000)
 
-```csharp
-// Choose a small stack threshold to avoid stack overflow
-const int stackAllocThreshold = 256;
 
-byte[]? pooled = null;
 
-// Either use stack memory or pooled memory
-Span<byte> span = bytesNeeded <= stackAllocThreshold
-    ? stackalloc byte[stackAllocThreshold]
-    : (pooled = ArrayPool<byte>.Shared.Rent(bytesNeeded);
-
-// Write to the span and process it
-var written = Populate(span);
-Process(span[..written]);
-
-// Return the pooled memory if we used it
-if (pooled is not null)
-{
-    ArrayPool<byte>.Shared.Return(pooled);
-}
-```
-Answer from [Miha Zupan](https://twitter.com/_MihaZupan/status/1521135981356896258) for why to use a flat 256 instead of the `bytesNeeded` for the stack allocation:
-> If you use SkipLocalsInit (perf sensitive code like this should and does), a constant size stackalloc is more efficient. It also means you don't have to explicitly guard against passing a negative value to the stackalloc.
-
-Answer to why 256 is used. You can also see [other places](https://grep.app/search?q=stackalloc&filter[lang][0]=C%23&filter[repo][0]=dotnet/runtime) it's used in .NET:
-> It's conservative to avoid stack overflows.
-
-### High performance byte/char manipulation 2
-[A more in-depth version via David Fowler](https://twitter.com/davidfowl/status/1521008356864843777/photo/1)
-
-```csharp
-using var memory = bytesNeeded <= 256
-    ? new StackOrPooledMemory(stackalloc byte[256])
-    : new StackOrPooledMemory(bytesNeeded);
-
-Span<byte> span = memory.Buffer;
-var written = Populate(span);
-Process(span[written..]);
-
-ref struct StackOrPooledMemory
-{
-    private readonly Span<byte> _span;
-    private byte[]? _arrayPooled;
-    
-    public StackOrPooledMemory(Span<byte> buffer)
-    {
-        _span = buffer;
-        _arrayPooled = null;
-    }
-
-    public StackOrPooledMemory(int size)
-    {
-        var buffer = ArrayPool<byte>.Shared.Rent(size);
-        _arrayPooled = buffer;
-        _span = buffer;
-    }
-
-    public Span<byte> Buffer => _span;
-
-    public void Dispose()
-    {
-        if (_arrayPooled is not null)
-        {
-            var pooled = _arrayPooled;
-            _arrayPooled = null;
-            ArrayPool<byte>.Shared.Return(pooled);
-        }
-    }
-}
-```
-
-Answer from [David Fowler](https://twitter.com/davidfowl/status/1521011080373293056) as to why no try/finally:
-> We often skip that in high performance code, if the buffer doesn't go back to the pool because of exceptions, it'll get GCed.
-> 
-And [another note](https://twitter.com/davidfowl/status/1521127114124058626):
-> Try/finally prevents inlining
 
 
 ## 🔴 Very Risky ☠
@@ -291,22 +124,7 @@ for (int i = 0; i < span.Length; i++)
 
 [Unsafe.Add Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.add?view=net-8.0)
 
-### Even even faster loops
 
-```csharp
-ref var start = ref MemoryMarshal.GetArrayDataReference(items);
-ref var end = ref Unsafe.Add(ref start, items.Length);
-
-while(Unsafe.IsAddressLessThan(ref start, ref end)){
-    Console.WriteLine(start);
-    start = ref Unsafe.Add(ref start, 1);
-}
-```
-
-Don't mutate the collection during looping.
-
-#### References
-[I Lied! The Fastest C# Loop Is Even Weirder - Nick Chapsas](https://www.youtube.com/watch?v=KLtMtxUihBk) (Nick, how do you keep finding these?)
 
 ### Unsafe
 
