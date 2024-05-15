@@ -184,7 +184,7 @@ public async Task<string> GetFileContentsAsync(string path)
 var result = await GetValue();
 
 
-public ValueTask<int> GetValue()
+public async ValueTask<int> GetValue()
 {
 	// implementation omitted
 	return value;
