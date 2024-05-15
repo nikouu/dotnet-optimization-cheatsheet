@@ -302,7 +302,7 @@ for (int i = 0; i < span.Length; i++)
 
 If a `Span<T>` isn't viable, you can create your own enumerator with `ref` and `readonly` keywords. Information can be found at [Unusual optimizations; ref foreach and ref returns by Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html).
 
-### 🟡 `ArrayPool`
+### 🟡 `ArrayPool<T>`
 
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1)
 
