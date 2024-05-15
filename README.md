@@ -2,7 +2,6 @@
 - rewrite with better preamble around optimisation
 - add table of contents for the different levels
 - string.create
-- suggestions on what to optimise first such as architecture, adding more hardware
 - go back and fix up the tabs and spaces
 - refs for structs
 
@@ -13,19 +12,7 @@
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
 
-
-
-
-### ThreadPool
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.threadpool?view=net-7.0)
-
-### ArrayPool
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1?view=net-7.0)
-
+    
 ### MemoryPool
 
 #### References

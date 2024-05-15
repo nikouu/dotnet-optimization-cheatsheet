@@ -4,13 +4,12 @@
 
 >Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
 
-If you're the 3%, this is an educational look at .NET performance tricks I've gathered over time. By reading this I assume you understand that architecture, data flow, general performance decisions, hardware, etc have a far larger impact to your codebase than optimising for single digit milliseconds or nanoseconds. 
+If you're the 3%, this is an educational look at .NET performance tricks I've gathered over time. By reading this I assume you understand that architecture, patterns, data flow, general performance decisions, hardware, etc have a far larger impact to your codebase than optimising for potentially single digit milliseconds or nanoseconds. 
 
 You'll need to consider:
 1. Will I be pre-maturely optimising?
 1. Understand the risks involved
 1. Is the time spent doing this worth it?
-
 
 I've rated each optimisation here in terms of difficulty. You may gauge the difficulties differently. 
 
@@ -303,6 +302,31 @@ for (int i = 0; i < span.Length; i++)
 
 If a `Span<T>` isn't viable, you can create your own enumerator with `ref` and `readonly` keywords. Information can be found at [Unusual optimizations; ref foreach and ref returns by Marc Gravell](https://blog.marcgravell.com/2022/05/unusual-optimizations-ref-foreach-and.html).
 
+### 🟡 `ArrayPool`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1)
+
+[How to use ArrayPool and MemoryPool in C# by Joydip Kanjilal](https://www.infoworld.com/article/3596289/how-to-use-arraypool-and-memorypool-in-c.html)
+
+Allows us to rent an array of type `T` that has equal to or greater size than what we ask for. This helps us reduce allocations on hot paths as instead of creating and destroying array instances, we reuse them. 
+
+```csharp
+var buffer = ArrayPool<int>.Shared.Rent(5);
+
+for (var i = 0; i < 5; i++)
+{
+    buffer[i] = i * 2;
+}
+
+for (var i = 0; i < 5; i++)
+{
+    Console.WriteLine(buffer[i]);
+}
+
+ArrayPool<int>.Shared.Return(buffer);
+```
+
+
 ### 🔴 `SkipLocalsInit`
 
 [C# 9 - Improving performance using the SkipLocalsInit attribute by Gérald Barré](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
@@ -411,3 +435,27 @@ static void MyFunction<T>(Action<T> action, T state) => action(state);
 int myNumber = 42;
 MyFunction(static number => Console.WriteLine(number), myNumber);
 ```
+
+### 🔴 `ThreadPool`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.threadpool)
+
+[Offical Guide](https://learn.microsoft.com/en-us/dotnet/standard/threading/the-managed-thread-pool)
+
+If you're going to use low level threads, you'll probably be using `ThreadPool` as it manages the threads for us. As .NET has moved forwards, a lot of raw thread or thread pool usage has been superseded (in my experience) by PLINQ, Parallel foreach calls, [`Task.Factory.StartNew()`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskfactory.startnew), [`Task.Run()`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run) etc - I.E. further abstraction over threads.
+
+The following is via the documentation above:
+```csharp
+ThreadPool.QueueUserWorkItem(ThreadProc);
+Console.WriteLine("Main thread does some work, then sleeps.");
+Thread.Sleep(1000);
+
+Console.WriteLine("Main thread exits.");
+
+static void ThreadProc(Object stateInfo) 
+{
+    // No state object was passed to QueueUserWorkItem, so stateInfo is null.
+    Console.WriteLine("Hello from the thread pool.");
+}
+``` 
+
