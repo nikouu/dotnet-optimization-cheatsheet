@@ -310,6 +310,8 @@ If a `Span<T>` isn't viable, you can create your own enumerator with `ref` and `
 
 Allows us to rent an array of type `T` that has equal to or greater size than what we ask for. This helps us reduce allocations on hot paths as instead of creating and destroying array instances, we reuse them. 
 
+Note: you can also use the more flexible [`MemoryPool`](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.memorypool-1), however there are [further caveats](https://endjin.com/blog/2020/09/arraypool-vs-memorypool-minimizing-allocations-ais-dotnet) to that as it allocates to understand the owner of the item - which `ArrayPool` avoids.
+
 ```csharp
 var buffer = ArrayPool<int>.Shared.Rent(5);
 
@@ -326,6 +328,60 @@ for (var i = 0; i < 5; i++)
 ArrayPool<int>.Shared.Return(buffer);
 ```
 
+### 🟡 `StringPool`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/high-performance/stringpool)
+
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/microsoft.toolkit.highperformance.buffers.stringpool)
+
+This can be thought of as configurable/managed [string interning](https://learn.microsoft.com/en-us/dotnet/api/system.string.intern) with useful methods. Brought to us by the [.NET Community Toolkit](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/introduction).
+
+```csharp
+public string GetString(ReadOnlySpan<char> readOnlySpan)
+{
+	return StringPool.Shared.GetOrAdd(readOnlySpan);
+}
+```
+
+### 🟡 `ObjectPool`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.objectpool.objectpool-1?view=dotnet-plat-ext-7.0)
+
+[Official Guide](https://learn.microsoft.com/en-us/aspnet/core/performance/objectpool?view=aspnetcore-8.0)
+
+A general use pool. Has varying ways to setup.
+
+```csharp
+var objectPool = ObjectPool.Create<HeavyObject>();
+
+var pooledObject = objectPool.Get();
+
+// then some work
+
+objectPool.Return(pooledObject);
+```
+
+### 🟡 `RecyclableMemoryStream`
+
+[Official GitHub Repo](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
+
+This is designed to be a near-drop in replacement for `MemoryStream` objects, with configuration and metrics.
+
+To use an example from the link above:
+
+```csharp
+private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager();
+
+static void Main(string[] args)
+{
+	var sourceBuffer = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+	
+	using (var stream = manager.GetStream())
+	{
+		stream.Write(sourceBuffer, 0, sourceBuffer.Length);
+	}
+}
+```
 
 ### 🔴 `SkipLocalsInit`
 
@@ -366,7 +422,6 @@ public struct D
     [UnscopedRef]
     public ref int ByRefField => ref Field;
 }
-
 ```
 
 ### 🔴 Overriding `GetHashCode()` and `Equals` for Structs
@@ -404,10 +459,13 @@ With this we've mostly removed the safety .NET provides us in exchange for speed
 Don't mutate the collection during looping.
 
 ```csharp
+int[] items = [1, 2, 3, 4, 5];
+
 ref var start = ref MemoryMarshal.GetArrayDataReference(items);
 ref var end = ref Unsafe.Add(ref start, items.Length);
 
-while(Unsafe.IsAddressLessThan(ref start, ref end)){
+while (Unsafe.IsAddressLessThan(ref start, ref end))
+{
     Console.WriteLine(start);
     start = ref Unsafe.Add(ref start, 1);
 }
@@ -458,4 +516,16 @@ static void ThreadProc(Object stateInfo)
     Console.WriteLine("Hello from the thread pool.");
 }
 ``` 
+
+### 🔴 Vectorizing
+[SIMD-accelerated numeric types](https://learn.microsoft.com/en-us/dotnet/standard/simd)
+
+[Vectorization Guidelines](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/vectorization-guidelines.md)
+
+[Great self-learning post by Alexandre Mutel](https://xoofx.github.io/blog/2023/07/09/10x-performance-with-simd-in-csharp-dotnet/)
+
+Single Instruction, Multiple Data (SIMD) allows us to act on multiple values per iteration rather than just a single value via vectorization. As .NET has moved forward, it's been made easier to take advantage of vectors.
+
+Vectorizing adds complexity to your codebase, but thankfully under the hood, common .NET methods have been written using vectorization and we get the benefit such as for [string.IndexOf() for OrdinalIgnoreCase](https://github.com/dotnet/runtime/pull/67758).
+
 

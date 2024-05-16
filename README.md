@@ -4,6 +4,8 @@
 - string.create
 - go back and fix up the tabs and spaces
 - refs for structs
+- thread locals
+- finish vectorization
 
 # Dotnet Optimization Cheatsheet
 
@@ -11,27 +13,6 @@
 ## 🟢 Least Risky 😇
 Nothing too scary here. The documentation should provide you with all the knowledge you need.
 
-
-    
-### MemoryPool
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.memorypool-1?view=net-7.0)
-
-### ObjectPool
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.objectpool.objectpool-1?view=dotnet-plat-ext-7.0)
-
-### StringPool
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.toolkit.highperformance.buffers.stringpool?view=win-comm-toolkit-dotnet-7.1)
-
-### RecyclableMemoryStream
-
-#### References
-[Official GitHub Repo](https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream)
 
 ### Removing unnecessary boxing/unboxing
 
@@ -60,11 +41,6 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 [.NET 7 Self-Contained, NativeAOT, and ReadyToRun Cheatsheet](https://www.nikouusitalo.com/blog/net-7-self-contained-nativeaot-and-readytorun-cheatsheet/) (Self plug)
 
-### Vectorizing
-
-#### References
-[Use SIMD-accelerated numeric types](https://learn.microsoft.com/en-us/dotnet/standard/simd)
-[dotnet/runtime Vectorization Guidelines](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/vectorization-guidelines.md)
 
 ### Loop Alignment
 
