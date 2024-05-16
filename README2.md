@@ -529,3 +529,10 @@ Single Instruction, Multiple Data (SIMD) allows us to act on multiple values per
 Vectorizing adds complexity to your codebase, but thankfully under the hood, common .NET methods have been written using vectorization and we get the benefit such as for [string.IndexOf() for OrdinalIgnoreCase](https://github.com/dotnet/runtime/pull/67758).
 
 
+### 🔴 Inline Arrays
+
+[C# 12 release notes](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12#inline-arrays)
+
+[Inline array language proposal document](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-12.0/inline-arrays)
+
+[Fun example via David Fowler](https://x.com/davidfowl/status/1678190691841716224)
