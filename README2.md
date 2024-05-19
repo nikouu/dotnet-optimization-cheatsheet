@@ -538,3 +538,21 @@ Vectorizing adds complexity to your codebase, but thankfully under the hood, com
 [Inline array language proposal document](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-12.0/inline-arrays)
 
 [Fun example via David Fowler](https://x.com/davidfowl/status/1678190691841716224)
+
+### 🔴 `SuppressGCTransition`
+
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.suppressgctransitionattribute)
+
+[Great writeup by Kevin Gosse](https://minidump.net/suppressgctransition-b9a8a774edbd/)
+
+This attribute prevents the thread transition from cooperative GC move to preemptive GC mode when applied to a `DllImport`. It shaves only nanoseconds and has many caveats for usage. 
+
+Example via Kevin Gosse:
+```csharp
+public int PInvoke_With_SuppressGCTransition()
+{
+	[DllImport("NativeLib.dll")]
+	[SuppressGCTransition]
+	static extern int Increment(int value);
+}
+```
