@@ -393,7 +393,7 @@ static void Main(string[] args)
 
 [Feature design for SkipLocalsInit](https://github.com/dotnet/roslyn/blob/main/docs/features/skiplocalsinit.md)
 
-By default the CLR forces the JIT to set all local variabls to their default value meaning your variable won't be some leftover value from memory. In high performance situations, this may become noticeable and we can skip this initialization as long as we understand the risk being taken on.
+By default the CLR forces the JIT to set all local variabls to their default value meaning your variable won't be some leftover value from memory. In high performance situations, this may become noticeable and we can skip this initialization as long as we understand the risk being taken on. Also see [`Unsafe.SkipInit<T>`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.skipinit).
 
 ```csharp
 [SkipLocalsInit]
