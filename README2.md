@@ -11,7 +11,7 @@ You'll need to consider:
 1. Understand the risks involved
 1. Is the time spent doing this worth it?
 
-I've rated each optimisation here in terms of difficulty. You may gauge the difficulties differently. Remember, we're looking at the last 3%, so while some are easy to implement, they may only be measurably effective on an extremely hot path.
+I've rated each optimisation here in terms of difficulty and you may gauge the difficulties differently. Remember, we're looking at the last 3%, so while some are easy to implement, they may only be measurably effective on an extremely hot path.
 
 | Difficulty       | Reasoning                                                                                                                                                                                                                                 |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
