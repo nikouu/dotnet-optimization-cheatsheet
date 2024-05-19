@@ -4,7 +4,7 @@
 
 >Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
 
-If you're the 3%, this is an educational look at .NET performance tricks I've gathered over time. By reading this I assume you understand that architecture, patterns, data flow, general performance decisions, hardware, etc have a far larger impact to your codebase than optimising for potentially single digit milliseconds or nanoseconds. 
+If you're the 3%, this is an educational look at .NET performance tricks I've gathered. By reading this I assume you understand that architecture, patterns, data flow, general performance decisions, hardware, etc have a far larger impact to your codebase than optimising for potentially single digit milliseconds or nanoseconds. 
 
 You'll need to consider:
 1. Will I be pre-maturely optimising?
