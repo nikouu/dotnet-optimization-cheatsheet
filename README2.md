@@ -252,6 +252,8 @@ Parallel.ForEach(images, (image) => {
 
 [`Memory<T>` and `Span<T>` usage guidelines](https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines)
 
+[A Complete .NET Developer's Guide to Span with Stephen Toub](https://www.youtube.com/watch?v=5KdICNWOfEQ)
+
 [Turbocharged: Writing High-Performance C# and .NET Code - Steve Gordon](https://www.youtube.com/watch?v=CwISe8blq38)
 
 All three of these "represent an arbitrary contiguous region of memory". Another way it's commonly explained is these can be thought of as a window into the memory. 
