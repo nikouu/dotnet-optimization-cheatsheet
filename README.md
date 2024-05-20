@@ -5,7 +5,6 @@
 - go back and fix up the tabs and spaces
 - refs for structs
 - thread locals
-- finish vectorization
 
 # Dotnet Optimization Cheatsheet
 

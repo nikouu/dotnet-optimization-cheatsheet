@@ -520,16 +520,39 @@ static void ThreadProc(Object stateInfo)
 ``` 
 
 ### 🔴 Vectorizing
+
+[Use SIMD-accelerated numeric types documentation](https://learn.microsoft.com/en-us/dotnet/standard/simd)
+
 [SIMD-accelerated numeric types](https://learn.microsoft.com/en-us/dotnet/standard/simd)
 
 [Vectorization Guidelines](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/vectorization-guidelines.md)
 
 [Great self-learning post by Alexandre Mutel](https://xoofx.github.io/blog/2023/07/09/10x-performance-with-simd-in-csharp-dotnet/)
 
-Single Instruction, Multiple Data (SIMD) allows us to act on multiple values per iteration rather than just a single value via vectorization. As .NET has moved forward, it's been made easier to take advantage of vectors.
+Single Instruction, Multiple Data (SIMD) allows us to act on multiple values per iteration rather than just a single value via vectorization. As .NET has moved forward, it's been made easier to take advantage of this feature.
 
-Vectorizing adds complexity to your codebase, but thankfully under the hood, common .NET methods have been written using vectorization and we get the benefit such as for [string.IndexOf() for OrdinalIgnoreCase](https://github.com/dotnet/runtime/pull/67758).
+Vectorizing adds complexity to your codebase, but thankfully under the hood, common .NET methods have been written using vectorization and as such we get the benefit for free. E.g. [string.IndexOf() for OrdinalIgnoreCase](https://github.com/dotnet/runtime/pull/67758).
 
+The following is a simple example:
+```csharp
+// Initialize two arrays for the operation
+int[] array1 = [1, 2, 3, 4, 5, 6, 7, 8];
+int[] array2 = [8, 7, 6, 5, 4, 3, 2, 1];
+int[] result = new int[array1.Length];
+
+// Create vectors from the arrays
+var vector1 = new Vector<int>(array1);
+var vector2 = new Vector<int>(array2);
+
+// Perform the addition
+var resultVector = Vector.Add(vector1, vector2);
+
+// Copy the results back into the result array
+resultVector.CopyTo(result);
+
+// Print the results
+Console.WriteLine(string.Join(", ", result));  // Outputs: 9, 9, 9, 9, 9, 9, 9, 9
+```
 
 ### 🔴 Inline Arrays
 
