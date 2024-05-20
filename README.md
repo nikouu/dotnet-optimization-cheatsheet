@@ -1,4 +1,3 @@
-- add inline arrays
 - rewrite with better preamble around optimisation
 - add table of contents for the different levels
 - string.create
@@ -45,13 +44,6 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 #### References
 [DevBlog Post](https://devblogs.microsoft.com/dotnet/loop-alignment-in-net-6/)
-
-
-### Inline Arrays
-
-#### References
-
-[David Fowler](https://twitter.com/davidfowl/status/1678190691841716224)
 
 
 

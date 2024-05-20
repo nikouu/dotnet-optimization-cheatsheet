@@ -562,6 +562,32 @@ Console.WriteLine(string.Join(", ", result));  // Outputs: 9, 9, 9, 9, 9, 9, 9, 
 
 [Fun example via David Fowler](https://x.com/davidfowl/status/1678190691841716224)
 
+The documentation states: 
+>You likely won't declare your own inline arrays, but you use them transparently when they're exposed as `System.Span<T>` or `System.ReadOnlySpan<T>` objects from runtime APIs
+
+Inline arrays are more a runtime feature for the .NET development team at Microsoft as it allows them to give us featurs such as `Span<T>` and interaction with unmanaged types. They're essentially fixed-sized stack allocated buffers.
+
+Example from documentation:
+
+```csharp
+[InlineArray(10)]
+public struct Buffer
+{
+    private int _element0;
+}
+
+var buffer = new Buffer();
+for (int i = 0; i < 10; i++)
+{
+    buffer[i] = i;
+}
+
+foreach (var i in buffer)
+{
+    Console.WriteLine(i);
+}
+```
+
 ### 🔴 `SuppressGCTransition`
 
 [Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.suppressgctransitionattribute)
