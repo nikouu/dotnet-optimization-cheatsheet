@@ -2,6 +2,9 @@
 - go back and fix up the tabs and spaces
 - refs for structs
 - thread locals
+- different lock types like interlocked and semaphoreslims
+- AggressiveInline attribute
+- EF compile query
 
 # Dotnet Optimization Cheatsheet
 
