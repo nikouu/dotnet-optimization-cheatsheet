@@ -385,6 +385,18 @@ static void Main(string[] args)
 }
 ```
 
+### 🟡 Server Garbage Collection
+
+[Garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
+
+[Official documentation](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
+
+[Runtime configuration options for garbage collection](https://learn.microsoft.com/en-us/dotnet/core/runtime-config/garbage-collector)
+
+[.NET Memory Performance Analysis section with server GC](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md#server-gc)  
+
+Having concurrent threads help with garbage collection can minimise the GC pause time in an application. However there are caveats to do with the amount of logical processors and how many applications are running on the machine at once.
+
 ### 🔴 `SkipLocalsInit`
 
 [C# 9 - Improving performance using the SkipLocalsInit attribute by Gérald Barré](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
@@ -402,6 +414,51 @@ byte SkipInitLocals()
     Span<byte> s = stackalloc byte[10];
     return s[0];
 }
+```
+
+### 🔴 `unsafe` (keyword)
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
+
+[Unsafe code, pointer types, and function pointers](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code)
+
+The `unsafe` keyword allows us to work with pointers in C# to write unverifyable code. We can allocate memory without safety from the garbage collector, use pointers, and call methods with function pointers.
+
+However, we are on our own. No GC collection, no security guarantee, no type safety, and other caveats. 
+
+Example via documentation:
+```csharp
+class UnsafeTest
+{
+    // Unsafe method: takes pointer to int.
+    unsafe static void SquarePtrParam(int* p)
+    {
+        *p *= *p;
+    }
+
+    unsafe static void Main()
+    {
+        int i = 5;
+        // Unsafe method: uses address-of operator (&).
+        SquarePtrParam(&i);
+        Console.WriteLine(i);
+    }
+}
+```
+
+### 🔴 `Unsafe` (class)
+
+[Official documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe)
+
+Safer than the `unsafe` keyword, the `Unsafe` class allows us to do lower level manipulation for performant code by supressing type safety while still being tracked by the garbage collector. There are caveats, especially around type safety.
+
+```csharp
+var items = new Span<int>([ 0, 1, 2, 3, 4 ]);
+ref var spanRef = ref MemoryMarshal.GetReference(items);
+
+var item = Unsafe.Add(ref spanRef, 2);
+
+Console.WriteLine(item); // prints 2
 ```
 
 ### 🔴 Ref fields (with `UnscopedRef`)
@@ -449,6 +506,28 @@ public override int GetHashCode()
         hash = (hash * 16777619) ^ field3.GetHashCode();
         return hash;
     }
+}
+```
+
+### 🔴 Even Faster Loops
+
+[The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
+
+[MemoryMarshal.GetReference Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.getreference?view=net-8.0)
+
+[Unsafe.Add Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.add?view=net-8.0)
+
+Using 
+
+```csharp
+var items = new List<int> { 1, 2, 3, 4, 5 };
+var span = CollectionsMarshal.AsSpan(items);
+ref var searchSpace = ref MemoryMarshal.GetReference(span);
+
+for (int i = 0; i < span.Length; i++)
+{
+    var item = Unsafe.Add(ref searchSpace, i);
+    Console.WriteLine(item);
 }
 ```
 
@@ -603,5 +682,30 @@ public int PInvoke_With_SuppressGCTransition()
 	[DllImport("NativeLib.dll")]
 	[SuppressGCTransition]
 	static extern int Increment(int value);
+}
+```
+
+### 🔴 `GC.TryStartNoGCRegion()`
+
+[Official reference](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
+
+[Preventing .NET Garbage Collections with the TryStartNoGCRegion API by Matt Warren](https://mattwarren.org/2016/08/16/Preventing-dotNET-Garbage-Collections-with-the-TryStartNoGCRegion-API/)
+
+Used for absolutely critical hotpaths, `TryStartNoGCRegion()` will attempt to disallow the garbage collection until the corresponding `EndNoGCRegion()` call. There are many caveats here that may throw exceptions, and lead to accidental misuse.
+
+```csharp
+if (GC.TryStartNoGCRegion(10000))
+{
+	Console.WriteLine("No GC Region started successfully.");
+
+	int[] values = new int[10000];
+
+	// do work
+
+	GC.EndNoGCRegion();
+}
+else
+{
+	Console.WriteLine("No GC Region failed to start.");
 }
 ```

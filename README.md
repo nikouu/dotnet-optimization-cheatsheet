@@ -1,5 +1,3 @@
-- rewrite with better preamble around optimisation
-- add table of contents for the different levels
 - string.create
 - go back and fix up the tabs and spaces
 - refs for structs
@@ -22,13 +20,6 @@ Nothing too scary here. The documentation should provide you with all the knowle
 All the usual .NET safeties are included, however you may need to have a deeper understanding of the topic to not run into trouble in order to successfully use them.
 
 
-### Garbage Collection
-
-#### References
-[Garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
-
-[Workstation and server garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
-
 
 ### AOT
 
@@ -48,37 +39,7 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 
 
 
-
-
 ## 🔴 Very Risky ☠
-🔥 Prod might go up in a spectacular ball of flame 🔥
-
-![](images/mad-max-fireball.gif)
-
-☠ These also might be detrimental to the health of your codebase, colleagues, and mental fortitude. They could be antipatterns, malpractice, or just overall disgusting. If you think these are good ideas for your codebase, stop and think: *are they really?* Because they're probably not. ☠
-
-### Even faster loops
-
-```csharp
-var items = new List<int> { 1, 2, 3, 4, 5 };
-var span = CollectionsMarshal.AsSpan(items);
-ref var searchSpace = ref MemoryMarshal.GetReference(span);
-
-for (int i = 0; i < span.Length; i++)
-{
-    var item = Unsafe.Add(ref searchSpace, i);
-    Console.WriteLine(item);
-}
-```
-
-#### References
-[The weirdest way to loop in C# is also the fastest - Nick Chapsas](https://www.youtube.com/watch?v=cwBrWn4m9y8)
-
-[MemoryMarshal.GetReference Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.getreference?view=net-8.0)
-
-[Unsafe.Add Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.add?view=net-8.0)
-
-
 
 ### Unsafe
 
@@ -91,10 +52,6 @@ for (int i = 0; i < span.Length; i++)
 [Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal?view=net-7.0)
 [Double the Performance of your Dictionary in C# - Nick Chapsas](https://www.youtube.com/watch?v=rygIP5sh00M)
 
-### Disallow Garbage Collection (for a time)
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
 
 ### Loop Unrolling
 
