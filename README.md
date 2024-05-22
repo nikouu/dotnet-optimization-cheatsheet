@@ -2,6 +2,10 @@
 - refs for structs
 - thread locals
 - different lock types like interlocked and semaphoreslims
+- make sure the headings have the same casing
+- make sure references and documentation keywords have been corrected for links
+- make sure referenece then documentation then other links
+
 
 # Dotnet Optimization Cheatsheet
 
