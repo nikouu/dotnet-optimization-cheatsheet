@@ -1,10 +1,8 @@
-- string.create
 - go back and fix up the tabs and spaces
 - refs for structs
 - thread locals
 - different lock types like interlocked and semaphoreslims
 - AggressiveInline attribute
-- EF compile query
 
 # Dotnet Optimization Cheatsheet
 
@@ -34,26 +32,10 @@ All the usual .NET safeties are included, however you may need to have a deeper 
 [.NET 7 Self-Contained, NativeAOT, and ReadyToRun Cheatsheet](https://www.nikouusitalo.com/blog/net-7-self-contained-nativeaot-and-readytorun-cheatsheet/) (Self plug)
 
 
-### Loop Alignment
-
-#### References
-[DevBlog Post](https://devblogs.microsoft.com/dotnet/loop-alignment-in-net-6/)
-
-
 
 
 ## 🔴 Very Risky ☠
 
-### Unsafe
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
-
-### CollectionsMarshal
-
-#### References
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal?view=net-7.0)
-[Double the Performance of your Dictionary in C# - Nick Chapsas](https://www.youtube.com/watch?v=rygIP5sh00M)
 
 
 ### Loop Unrolling

@@ -39,6 +39,7 @@ If you're looking for tools to help, I have: [Optimization-Tools-And-Notes](http
 
 | Resource                                                                                                                                                                      | Description                                                                                                            |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [Pro .NET Memory Management](https://prodotnetmemory.com/)                                                                                                                    | A heavy and incredibly informative read on everything memory and memory-performance in .NET                            |
 | [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                                                                       | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                                                   |
 | [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md)                                                        | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0)                       |
 | [Classes vs. Structs. How not to teach about performance!](https://sergeyteplyakov.github.io/Blog/benchmarking/2023/11/02/Performance_Comparison_For_Classes_vs_Structs.html) | A critique of bad benchmarking by [Sergiy Teplyakov](https://sergeyteplyakov.github.io/Blog/)                          |
@@ -120,7 +121,27 @@ foreach(var word in words)
 }
 
 Console.WriteLine(stringBuilder.ToString());
+```
 
+### 🟢 `string.Create()`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.string.create)
+
+[Post via Dave Callan](https://x.com/Dave_DotNet/status/1682699744747958274)
+
+If you know the length of your final string, perhaps you're concatenating various strings to one, you can use `string.Create()` to speed up the final string creation with minimal allocations.
+
+It looks a complex, but this method allows us to manipulate the string as if it were mutable inside the lambda via a `Span<T>` and guarantees us an immutable string afterwards. 
+
+Example via [Stephen Toub](https://youtu.be/5KdICNWOfEQ?t=2669)
+```csharp
+string s = string.Create(34, Guid.NewGuid(), (span, guid) => 
+{
+	"ID".AsSpan().CopyTo(span);
+	guid.TryFormat(span.Slice(2), out _, "N");
+});
+
+Console.WriteLine(s); // ID3d1822eb1310418cbadeafbe3e7b7b9f
 ```
 
 ### 🟢 Don't use async with large SqlClient data
@@ -156,6 +177,23 @@ public async Task GetFromJsonAsync()
 ```
 
 These two examples above eliminate copying the response from the stream to a JSON string then the JSON string into our objects. 
+
+### 🟢 EF Core compiled queries
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ef/language-reference/compiled-queries-linq-to-entities)
+
+There is also a `CompileAsyncQuery` available too.
+
+```csharp
+// EF Core compiled query
+private static readonly Func<MyDbContext, IEnumerable<User>> _getUsersQuery =
+	EF.CompileQuery((MyDbContext context) => context.Users.ToList());
+
+public IEnumerable<User> GetUsers()
+{
+	return _getUsersQuery(_context);
+}
+```
 
 ### 🟡 Async
 
@@ -397,6 +435,89 @@ static void Main(string[] args)
 
 Having concurrent threads help with garbage collection can minimise the GC pause time in an application. However there are caveats to do with the amount of logical processors and how many applications are running on the machine at once.
 
+### 🔴 `stackalloc`
+
+[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/stackalloc)
+
+[High performance byte/char manipulation via David Fowler](https://x.com/davidfowl/status/1520966312817664000)
+
+[My favourite examples](https://github.com/nikouu/Neat-CSharp-Snippets?tab=readme-ov-file#stackalloc-patterns)
+
+[Dos and Don'ts of stackalloc via Kevin Jones](https://vcsjones.dev/stackalloc/)
+
+`stackalloc` gives us a block of memory on the stack. We can easily use it with `Span<T>` and `ReadOnlySpan<T>` to work as small buffers. Highly performance stack-only work, no heap, no garbage collector.
+
+A caveat here is it must be small to prevent stack overflows. I've seen developers at Microsoft use a [max size of 256 bytes](https://grep.app/search?q=stackalloc&filter[lang][0]=C%23&filter[repo][0]=dotnet/runtime).
+
+Example from David Fowler, linked above.
+```csharp
+// Choose a small stack threshold to avoid stack overflow
+const int stackAllocThreshold = 256;
+
+byte[]? pooled = null;
+
+// Either use stack memory or pooled memory
+Span<byte> span = bytesNeeded <= stackAllocThreshold
+    ? stackalloc byte[stackAllocThreshold]
+    : (pooled = ArrayPool<byte>.Shared.Rent(bytesNeeded);
+
+// Write to the span and process it
+var written = Populate(span);
+Process(span[..written]);
+
+// Return the pooled memory if we used it
+if (pooled is not null)
+{
+    ArrayPool<byte>.Shared.Return(pooled);
+}
+```
+
+### 🔴 `MemoryMarshal`
+
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal)
+
+More easily allows us to interoperate with `Memory<T>`, `ReadOnlyMemory<T>`, `Span<T>`, and `ReadOnlySpan<T>`. A lot of performant `Unsafe` (class) code is abstracted away from us when using `MemoryMarshal`. 
+
+There are little safeties granted to us in `MemoryMarshal` when compared to raw `Unsafe` calls, so the user must keep in mind that while they don't see `Unsafe` they are still at risk of the same type safety risks.
+
+Note: This advice roughly applies to all within the []`System.Runtime.InteropServices`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices) namespace, including `MemoryMarshal`.
+
+The following adapted from [Immo Landwerth](https://x.com/terrajobst/status/1507808952146223106):
+```csharp
+ReadOnlySpan<byte> bytes = MemoryMarshal.AsBytes(input.String.AsSpan());
+return HashData(bytes);
+
+Guid HashData(ReadOnlySpan<byte> bytes)
+{
+	var hashBytes = (Span<byte>)stackalloc byte[20];
+	var written = SHA1.HashData(bytes, hashBytes);
+
+	return new Guid(hashBytes[..16]);
+}
+```
+### 🔴 `CollectionsMarshal`
+
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal)
+
+`CollectionsMarshal` gives us handles to the underlying data representations of collections. It makes use of `MemoryMarshal` and `Unsafe` under the hood and as such any lack of safety that is found there extends to this, such as type safety risks.
+
+Assuming the developer keeps within safety boundaries, this allows us to make highly performant access to the collection.
+
+The following is an absolutely key caveat:
+>Items should not be added or removed while the span/ref is in use.
+
+While it means more than this, an easy point to remember is: don't add/remove from the collection while using the returned object.
+
+```csharp
+var items = new List<int> { 1, 2, 3, 4, 5 };
+var span = CollectionsMarshal.AsSpan(items);
+
+for (int i = 0; i < span.Length; i++)
+{
+    Console.WriteLine(span[i]);
+}
+```
+
 ### 🔴 `SkipLocalsInit`
 
 [C# 9 - Improving performance using the SkipLocalsInit attribute by Gérald Barré](https://www.meziantou.net/csharp-9-improve-performance-using-skiplocalsinit.htm)
@@ -517,7 +638,9 @@ public override int GetHashCode()
 
 [Unsafe.Add Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.add?view=net-8.0)
 
-Using 
+Using both `MemoryMarshal`, `CollectionsMarshal`, and `Unsafe` we're able to loop directly on the underlying array inside a `List<T>` and index quickly to the next element.
+
+Do not add or remove from the collection during looping.
 
 ```csharp
 var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -537,7 +660,7 @@ for (int i = 0; i < span.Length; i++)
 
 With this we've mostly removed the safety .NET provides us in exchange for speed. It is also difficult to understand at a glance without being familiar with `MemoryMarshal` methods.
 
-Don't mutate the collection during looping.
+Do not add or remove from the collection during looping.
 
 ```csharp
 int[] items = [1, 2, 3, 4, 5];
@@ -708,4 +831,18 @@ else
 {
 	Console.WriteLine("No GC Region failed to start.");
 }
+```
+
+### 🔴 Alignment
+
+[DevBlog Post](https://devblogs.microsoft.com/dotnet/loop-alignment-in-net-6/)
+
+[Example via Egor Bogatov](https://x.com/EgorBo/status/1646922981744992261)
+
+Alignment is around the CPU caches and we can spend extra effort in making sure our data is fitted to the CPU cache size. However, the CLR will put in a lot of effort to align this for us by adding padding if needed.
+
+However there may be times where we may have some influence such as with setting the `StructLayout` attribute on a `struct` or how we control our nested loops accesses.
+
+```csharp
+No example
 ```
