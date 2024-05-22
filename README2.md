@@ -37,19 +37,39 @@ If you're looking for tools to help, I have: [Optimization-Tools-And-Notes](http
 
 ## Further Resources
 
-| Resource                                                                                                                                                                      | Description                                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| [Pro .NET Memory Management](https://prodotnetmemory.com/)                                                                                                                    | A heavy and incredibly informative read on everything memory and memory-performance in .NET                            |
-| [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                                                                       | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                                                   |
-| [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md)                                                        | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0)                       |
-| [Classes vs. Structs. How not to teach about performance!](https://sergeyteplyakov.github.io/Blog/benchmarking/2023/11/02/Performance_Comparison_For_Classes_vs_Structs.html) | A critique of bad benchmarking by [Sergiy Teplyakov](https://sergeyteplyakov.github.io/Blog/)                          |
-| [Diagrams of .NET internals](https://goodies.dotnetos.org/)                                                                                                                   | In depth diagrams from the [Dotnetos courses](https://dotnetos.org/products/)                                          |
-| [Turbocharged: Writing High-Performance C# and .NET Code](https://www.youtube.com/watch?v=CwISe8blq38)                                                                        | A great video describing multiple ways to improve performance by [Steve Gordon](https://www.stevejgordon.co.uk/)       |
-| [Performance tricks I learned from contributing to open source .NET packages](https://www.youtube.com/watch?v=pGgsFW7kDKI)                                                    | A great video describing multiple ways to sqeeze out performance by [Daniel Marbach](https://github.com/danielmarbach) |
+| Resource                                                                                                                                                                      | Description                                                                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Pro .NET Memory Management](https://prodotnetmemory.com/)                                                                                                                    | A heavy and incredibly informative read on everything memory and memory-performance in .NET. A lot of knowledge below originally was seeded by this book and should be treated as an implicit reference. |
+| [PerformanceTricksAzureSDK](https://github.com/danielmarbach/PerformanceTricksAzureSDK)                                                                                       | Tricks written by [Daniel Marbach](https://github.com/danielmarbach)                                                                                                                                     |
+| [.NET Memory Performance Analysis](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md)                                                        | A thorough document on analyzing .NET performance by [Maoni Stephens](https://github.com/Maoni0)                                                                                                         |
+| [Classes vs. Structs. How not to teach about performance!](https://sergeyteplyakov.github.io/Blog/benchmarking/2023/11/02/Performance_Comparison_For_Classes_vs_Structs.html) | A critique of bad benchmarking by [Sergiy Teplyakov](https://sergeyteplyakov.github.io/Blog/)                                                                                                            |
+| [Diagrams of .NET internals](https://goodies.dotnetos.org/)                                                                                                                   | In depth diagrams from the [Dotnetos courses](https://dotnetos.org/products/)                                                                                                                            |
+| [Turbocharged: Writing High-Performance C# and .NET Code](https://www.youtube.com/watch?v=CwISe8blq38)                                                                        | A great video describing multiple ways to improve performance by [Steve Gordon](https://www.stevejgordon.co.uk/)                                                                                         |
+| [Performance tricks I learned from contributing to open source .NET packages](https://www.youtube.com/watch?v=pGgsFW7kDKI)                                                    | A great video describing multiple ways to sqeeze out performance by [Daniel Marbach](https://github.com/danielmarbach)                                                                                   |
 
 ## Optimisations
 
 [_We always want our code to "run faster". But rarely do we ask – what is it running from?_](https://twitter.com/moyix/status/1449397749343047681)
+
+### 🟢 Remove unncessary boxing/unboxing
+
+[.NET Performance Tips - Boxing and Unboxing](https://learn.microsoft.com/en-us/dotnet/framework/performance/performance-tips#boxing-and-unboxing)
+
+[Boxing and Unboxing (C# Programming Guide)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/types/boxing-and-unboxing)
+
+Boxing is converting an instance of a value type to an instance of a reference type. And unboxing the reverse. In most cases ([but not all](https://twitter.com/konradkokosa/status/1432622993390424064)), we'll be referring to putting a value type on the heap.
+
+This slows down performance because the runtime needs to do a two step operation:
+1. allocate the new boxed object on the heap which now has an object header and method table reference
+1. the copy to the heap
+
+This is two fold as it also eventually increases garbage collection pressure.
+
+We can recognise this as the emitted `box`/`unbox` operations in the IL code, or by using tools such as the [Clr Heap Allocation Analyzer](https://marketplace.visualstudio.com/items?itemName=MukulSabharwal.ClrHeapAllocationAnalyzer).
+
+```csharp
+No example
+```
 
 ### 🟢 Use fewer nullable value types
 
@@ -434,6 +454,20 @@ static void Main(string[] args)
 [.NET Memory Performance Analysis section with server GC](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md#server-gc)  
 
 Having concurrent threads help with garbage collection can minimise the GC pause time in an application. However there are caveats to do with the amount of logical processors and how many applications are running on the machine at once.
+
+### 🟡 Ahead of Time Compilation (AOT)
+
+[Native AOT Deployment Official Guide](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
+
+[.NET AOT Resources: 2022 Edition (Self plug)](https://www.nikouusitalo.com/blog/net-aot-resources-2022-edition/) 
+
+AOT allows us to compile our code natively for the target running environment - removing the JITer. This allows us to have a smaller deployment footprint and a faster startup time.
+
+Caveats here is that reflection (used in a lot of .NET) is extremely limited, we have to compile for each target environment, no COM, and more. We can get around some of these limitations with [source generators](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview).
+
+```csharp
+No example
+```
 
 ### 🔴 `stackalloc`
 
@@ -845,4 +879,35 @@ However there may be times where we may have some influence such as with setting
 
 ```csharp
 No example
+```
+
+### 🔴 `[MethodImpl(MethodImplOptions.AggressiveInlining)]`
+
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.methodimploptions)
+
+While there are many in the `MethodImplOptions` enum, I'd wager the most common is `MethodImplOptions.AggressiveInlining` which takes a piece of code and inserts it where the caller wants it as opposed to making a call out to a separate location, if possible.
+
+It's more appropriate to use this for small functions that are very hot. Caveats here is that it can increase the size of your application and could make it slower overall.
+
+The following example is from [System.Math](https://github.com/dotnet/runtime/blob/5535e31a712343a63f5d7d796cd874e563e5ac14/src/libraries/System.Private.CoreLib/src/System/Math.cs#L457C1-L475C10)
+```csharp
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+public static byte Clamp(byte value, byte min, byte max)
+{
+	if (min > max)
+	{
+		ThrowMinMaxException(min, max);
+	}
+
+	if (value < min)
+	{
+		return min;
+	}
+	else if (value > max)
+	{
+		return max;
+	}
+
+	return value;
+}
 ```
