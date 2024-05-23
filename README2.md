@@ -101,7 +101,7 @@ int? Fast(int x, int y) {
 
 [Twitter post via Daniel Lawson](https://twitter.com/danylaws/status/1504381170347294727)
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare?view=netcore-3.1)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.string.compare)
 
 `String.Compare()` is a memory efficient way to compare strings. This is in respect to the memory inefficient method of comparing by doing `stringA.ToLower() == stringB.ToLower()` - which due to strings being immutable, has to create a new string for each `.ToLower()` call.
 
@@ -145,7 +145,7 @@ Console.WriteLine(stringBuilder.ToString());
 
 ### 🟢 `string.Create()`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.string.create)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.string.create)
 
 [Post via Dave Callan](https://x.com/Dave_DotNet/status/1682699744747958274)
 
@@ -200,7 +200,7 @@ These two examples above eliminate copying the response from the stream to a JSO
 
 ### 🟢 EF Core compiled queries
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ef/language-reference/compiled-queries-linq-to-entities)
+[Official Article](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ef/language-reference/compiled-queries-linq-to-entities)
 
 There is also a `CompileAsyncQuery` available too.
 
@@ -217,7 +217,7 @@ public IEnumerable<User> GetUsers()
 
 ### 🟡 Async
 
-[Official Guide](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
+[Official Article](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
 
 Asynchronous programming allows us to continue with other tasks while waiting for I/O bound calls or expensive computations. In .NET we use the `async` and `await` keywords. There's too much to cover for this documentation, but once you get used to it, it's easy enough to use daily.
 
@@ -234,7 +234,7 @@ public async Task<string> GetFileContentsAsync(string path)
 
 [Official DevBlog by Stephen Toub](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/)
 
-[Official Documentation for ManualResetValueTaskSourceCore](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.sources.manualresetvaluetasksourcecore-1)
+[Official Reference for `ManualResetValueTaskSourceCore`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.sources.manualresetvaluetasksourcecore-1)
 
 `Task`s are very flexible to suit the varied needs asked of them. However, a lot of use cases of `Task` are simple single awaits and it may also be the case that during high throughput code there could be a performance hit of the allocations from `Task`. To solve these problems we have `ValueTask` which allocates less than `Task`. However there are caveats with the less flexibility compared to `Task` such as you shouldn't await a `ValueTask` more than once. 
 
@@ -251,7 +251,7 @@ public async ValueTask<int> GetValue()
 
 ### 🟡 Structs
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
+[Official Article](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)
 
 [Class vs Struct in C#: Making Informed Choices via NDepend blog](https://blog.ndepend.com/class-vs-struct-in-c-making-informed-choices/)
 
@@ -281,9 +281,9 @@ public struct Coords
 
 ### 🟡 `Parallel.ForEach()`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreach)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.parallel.foreach)
 
-[Official Guide](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-write-a-simple-parallel-foreach-loop)
+[Official Article](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-write-a-simple-parallel-foreach-loop)
 
 `Parallel.ForEach()` works like executing a `foreach` loop in parallel. Best used if you have lots of independent CPU bound work.
 
@@ -302,11 +302,11 @@ Parallel.ForEach(images, (image) => {
 
 ### 🟡 `Span<T>`, `ReadOnlySpan<T>`, `Memory<T>`
 
-[`Span<T>` Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.span-1)
+[`Span<T>` Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.span-1)
 
-[`ReadOnlySpan<T>` Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.readonlyspan-1)
+[`ReadOnlySpan<T>` Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.readonlyspan-1)
 
-[`Memory<T>` Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.memory-1)
+[`Memory<T>` Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.memory-1)
 
 [`Memory<T>` and `Span<T>` usage guidelines](https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines)
 
@@ -364,7 +364,7 @@ If a `Span<T>` isn't viable, you can create your own enumerator with `ref` and `
 
 ### 🟡 `ArrayPool<T>`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.arraypool-1)
 
 [How to use ArrayPool and MemoryPool in C# by Joydip Kanjilal](https://www.infoworld.com/article/3596289/how-to-use-arraypool-and-memorypool-in-c.html)
 
@@ -390,9 +390,9 @@ ArrayPool<int>.Shared.Return(buffer);
 
 ### 🟡 `StringPool`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/high-performance/stringpool)
-
 [Official Reference](https://learn.microsoft.com/en-us/dotnet/api/microsoft.toolkit.highperformance.buffers.stringpool)
+
+[Official Article](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/high-performance/stringpool)
 
 This can be thought of as configurable/managed [string interning](https://learn.microsoft.com/en-us/dotnet/api/system.string.intern) with useful methods. Brought to us by the [.NET Community Toolkit](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/introduction).
 
@@ -405,9 +405,9 @@ public string GetString(ReadOnlySpan<char> readOnlySpan)
 
 ### 🟡 `ObjectPool`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.objectpool.objectpool-1?view=dotnet-plat-ext-7.0)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.objectpool.objectpool-1?view=dotnet-plat-ext-7.0)
 
-[Official Guide](https://learn.microsoft.com/en-us/aspnet/core/performance/objectpool?view=aspnetcore-8.0)
+[Official Article](https://learn.microsoft.com/en-us/aspnet/core/performance/objectpool?view=aspnetcore-8.0)
 
 A general use pool. Has varying ways to setup.
 
@@ -445,9 +445,9 @@ static void Main(string[] args)
 
 ### 🟡 Server Garbage Collection
 
-[Garbage collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
+[Garbage Collection Article](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
 
-[Official documentation](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
+[Workstation GC Official Article](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc)
 
 [Runtime configuration options for garbage collection](https://learn.microsoft.com/en-us/dotnet/core/runtime-config/garbage-collector)
 
@@ -471,7 +471,7 @@ No example
 
 ### 🔴 `stackalloc`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/stackalloc)
+[Official Article](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/stackalloc)
 
 [High performance byte/char manipulation via David Fowler](https://x.com/davidfowl/status/1520966312817664000)
 
@@ -573,7 +573,7 @@ byte SkipInitLocals()
 
 ### 🔴 `unsafe` (keyword)
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
+[Official Article](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
 
 [Unsafe code, pointer types, and function pointers](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code)
 
@@ -603,7 +603,7 @@ class UnsafeTest
 
 ### 🔴 `Unsafe` (class)
 
-[Official documentation](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe)
 
 Safer than the `unsafe` keyword, the `Unsafe` class allows us to do lower level manipulation for performant code by supressing type safety while still being tracked by the garbage collector. There are caveats, especially around type safety.
 
@@ -734,7 +734,7 @@ MyFunction(static number => Console.WriteLine(number), myNumber);
 
 ### 🔴 `ThreadPool`
 
-[Official Documentation](https://learn.microsoft.com/en-us/dotnet/api/system.threading.threadpool)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.threading.threadpool)
 
 [Offical Guide](https://learn.microsoft.com/en-us/dotnet/standard/threading/the-managed-thread-pool)
 
@@ -844,7 +844,7 @@ public int PInvoke_With_SuppressGCTransition()
 
 ### 🔴 `GC.TryStartNoGCRegion()`
 
-[Official reference](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
 
 [Preventing .NET Garbage Collections with the TryStartNoGCRegion API by Matt Warren](https://mattwarren.org/2016/08/16/Preventing-dotNET-Garbage-Collections-with-the-TryStartNoGCRegion-API/)
 
