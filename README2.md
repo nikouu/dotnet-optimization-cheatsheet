@@ -67,7 +67,7 @@ This is two fold as it also eventually increases garbage collection pressure.
 
 We can recognise this as the emitted `box`/`unbox` operations in the IL code, or by using tools such as the [Clr Heap Allocation Analyzer](https://marketplace.visualstudio.com/items?itemName=MukulSabharwal.ClrHeapAllocationAnalyzer).
 
-```csharp
+```
 No example
 ```
 
@@ -465,7 +465,7 @@ AOT allows us to compile our code natively for the target running environment - 
 
 Caveats here is that reflection (used in a lot of .NET) is extremely limited, we have to compile for each target environment, no COM, and more. We can get around some of these limitations with [source generators](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview).
 
-```csharp
+```
 No example
 ```
 
@@ -877,7 +877,7 @@ Alignment is around the CPU caches and we can spend extra effort in making sure 
 
 However there may be times where we may have some influence such as with setting the `StructLayout` attribute on a `struct` or how we control our nested loops accesses.
 
-```csharp
+```
 No example
 ```
 
@@ -911,3 +911,10 @@ public static byte Clamp(byte value, byte min, byte max)
 	return value;
 }
 ```
+
+## To be written
+
+- Locks: `lock`, `SemaphmoreSlim`, `Interlocked`
+- Thread locals
+- More `ref`
+- Loop unrolling
