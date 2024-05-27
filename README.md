@@ -453,6 +453,10 @@ static void Main(string[] args)
 
 [.NET Memory Performance Analysis section with server GC](https://github.com/Maoni0/mem-doc/blob/master/doc/.NETMemoryPerformanceAnalysis.md#server-gc)  
 
+[Twitter post with graphs from Sergiy Teplyakov](https://x.com/STeplyakov/status/1729204671133413815)
+
+[DevBlog post from Sergiy Teplyakov](https://devblogs.microsoft.com/premier-developer/understanding-different-gc-modes-with-concurrency-visualizer/)
+
 Having concurrent threads help with garbage collection can minimise the GC pause time in an application. However there are caveats to do with the amount of logical processors and how many applications are running on the machine at once.
 
 ### 🟡 Ahead of Time Compilation (AOT)
