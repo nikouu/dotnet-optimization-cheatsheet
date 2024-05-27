@@ -457,6 +457,8 @@ static void Main(string[] args)
 
 [DevBlog post from Sergiy Teplyakov](https://devblogs.microsoft.com/premier-developer/understanding-different-gc-modes-with-concurrency-visualizer/)
 
+[Blog post about .NET 8 GC feature: DATAS by Maoni Stephens](https://maoni0.medium.com/dynamically-adapting-to-application-sizes-2d72fcb6f1ea)
+
 Having concurrent threads help with garbage collection can minimise the GC pause time in an application. However there are caveats to do with the amount of logical processors and how many applications are running on the machine at once.
 
 ### 🟡 Ahead of Time Compilation (AOT)
