@@ -168,6 +168,10 @@ Console.WriteLine(s); // ID3d1822eb1310418cbadeafbe3e7b7b9f
 
 There is a long time open [dotnet GitHub issue](https://github.com/dotnet/SqlClient/issues/593) where larger returned query data takes a lot longer with async compared to sync.
 
+```
+No example
+```
+
 ### 🟢 Use streams with `HttpClient`
 
 [Performance Improvements in .NET 8 by Stephen Toub](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
@@ -213,6 +217,18 @@ public IEnumerable<User> GetUsers()
 {
 	return _getUsersQuery(_context);
 }
+```
+
+### 🟢 Keep "exceptions, exceptional"
+
+[Via Kevin Henney](https://x.com/KevlinHenney/status/1566350355188912129)
+
+[Some numbers via Peter Morris](https://x.com/MrPeterLMorris/status/1796136008326500756)
+
+In distributed systems especially, networking issues become business as usual, not exceptional circumstances. As an example, instead of [`HttpResponseMessage.EnsureSuccessStatusCode()`](https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpresponsemessage.ensuresuccessstatuscode) you may want to consider [`HttpResponseMessage.IsSuccessStatusCode`](https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpresponsemessage.issuccessstatuscode) then deal with it accordingly sans exception.
+
+```
+No example
 ```
 
 ### 🟡 Async
