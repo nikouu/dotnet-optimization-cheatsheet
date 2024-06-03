@@ -221,7 +221,7 @@ public IEnumerable<User> GetUsers()
 
 ### 🟢 Keep "exceptions, exceptional"
 
-[Via Kevin Henney](https://x.com/KevlinHenney/status/1566350355188912129)
+[Via Kevlin Henney](https://x.com/KevlinHenney/status/1566350355188912129)
 
 [Some numbers via Peter Morris](https://x.com/MrPeterLMorris/status/1796136008326500756)
 
