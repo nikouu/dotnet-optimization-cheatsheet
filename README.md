@@ -940,3 +940,5 @@ public static byte Clamp(byte value, byte min, byte max)
 - Thread locals
 - More `ref`
 - Loop unrolling
+- `StringValue`
+    - [A brief look at StringValues by Andrew Lock](https://andrewlock.net/a-brief-look-at-stringvalues/)
