@@ -937,8 +937,10 @@ public static byte Clamp(byte value, byte min, byte max)
 ## To be written
 
 - Locks: `lock`, `SemaphmoreSlim`, `Interlocked`
+    - [The Danger of Atomic Operations by Dmitry Vyukov et al](https://abseil.io/docs/cpp/atomic_danger) 
 - Thread locals
 - More `ref`
 - Loop unrolling
+- [CLR Configs](https://x.com/EgorBo/status/1794394757218615603?t=oUFEAbbzTxl7CD78vgr-GQ&s=19)
 - `StringValue`
     - [A brief look at StringValues by Andrew Lock](https://andrewlock.net/a-brief-look-at-stringvalues/)
