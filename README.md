@@ -8,7 +8,7 @@ If you're the 3%, this is an educational reference on .NET performance tricks I'
 
 You'll need to consider:
 1. Will I be pre-maturely optimising?
-1. Understand the risks involved
+1. Do I understand the risks involved?
 1. Is the time spent doing this worth it?
 
 I've rated each optimisation here in terms of difficulty and you may gauge the difficulties differently. Remember, we're looking at the last 3%, so while some are easy to implement, they may only be measurably effective on an extremely hot path.
@@ -477,6 +477,10 @@ static void Main(string[] args)
 
 Having concurrent threads help with garbage collection can minimise the GC pause time in an application. However there are caveats to do with the amount of logical processors and how many applications are running on the machine at once.
 
+```
+No example
+```
+
 ### 🟡 Ahead of Time Compilation (AOT)
 
 [Native AOT Deployment Official Guide](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
@@ -936,8 +940,9 @@ public static byte Clamp(byte value, byte min, byte max)
 
 ## To be written
 
-- Locks: `lock`, `SemaphmoreSlim`, `Interlocked`
+- Locks: `lock`, `SemaphmoreSlim`, `Interlocked`, and the new `System.Threading.Lock` lock.
     - [The Danger of Atomic Operations by Dmitry Vyukov et al](https://abseil.io/docs/cpp/atomic_danger) 
+    - [`Lock` object](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/lock-object)
 - Thread locals
 - More `ref`
 - Loop unrolling
