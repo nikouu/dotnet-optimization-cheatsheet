@@ -540,7 +540,7 @@ More easily allows us to interoperate with `Memory<T>`, `ReadOnlyMemory<T>`, `Sp
 
 There are little safeties granted to us in `MemoryMarshal` when compared to raw `Unsafe` calls, so the user must keep in mind that while they don't see `Unsafe` they are still at risk of the same type safety risks.
 
-Note: This advice roughly applies to all within the []`System.Runtime.InteropServices`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices) namespace, including `MemoryMarshal`.
+Note: This advice roughly applies to all within the [`System.Runtime.InteropServices`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices) namespace, including `MemoryMarshal`.
 
 The following adapted from [Immo Landwerth](https://x.com/terrajobst/status/1507808952146223106):
 ```csharp
@@ -586,7 +586,7 @@ for (int i = 0; i < span.Length; i++)
 
 [Feature design for SkipLocalsInit](https://github.com/dotnet/roslyn/blob/main/docs/features/skiplocalsinit.md)
 
-By default the CLR forces the JIT to set all local variabls to their default value meaning your variable won't be some leftover value from memory. In high performance situations, this may become noticeable and we can skip this initialization as long as we understand the risk being taken on. Also see [`Unsafe.SkipInit<T>`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.skipinit).
+By default the CLR forces the JIT to set all local variables to their default value meaning your variable won't be some leftover value from memory. In high performance situations, this may become noticeable and we can skip this initialization as long as we understand the risk being taken on. Also see [`Unsafe.SkipInit<T>`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.skipinit).
 
 ```csharp
 [SkipLocalsInit]
