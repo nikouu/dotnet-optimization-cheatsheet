@@ -97,7 +97,7 @@ int? Fast(int x, int y) {
 }
 ```
 
-### 🟢 Use `String.Compare()`
+### 🟢 Use `String.Compare()` or `String.Equals()`
 
 [Twitter post via Daniel Lawson](https://twitter.com/danylaws/status/1504381170347294727)
 
@@ -949,3 +949,5 @@ public static byte Clamp(byte value, byte min, byte max)
 - [CLR Configs](https://x.com/EgorBo/status/1794394757218615603?t=oUFEAbbzTxl7CD78vgr-GQ&s=19)
 - `StringValue`
     - [A brief look at StringValues by Andrew Lock](https://andrewlock.net/a-brief-look-at-stringvalues/)
+- `System.Text.Json.Utf8*`
+    - [MS Blog](https://devblogs.microsoft.com/dotnet/the-convenience-of-system-text-json/)
