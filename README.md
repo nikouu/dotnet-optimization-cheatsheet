@@ -938,6 +938,36 @@ public static byte Clamp(byte value, byte min, byte max)
 }
 ```
 
+### 🔴 Improving `ReadOnlySequence<T>` performance
+
+[Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.readonlysequence-1?view=net-8.0)
+
+[Twitter post via @neuecc](https://x.com/neuecc/status/1629725919735840770)
+
+[Cysharp/MemoryPack benchmark test](https://github.com/Cysharp/MemoryPack/blob/753a5557e9415201c01dae34b1a551b95ef1a150/sandbox/Benchmark/Micro/SpanSliceTest.cs)
+
+The `Slice()` operation on a `ReadOnlySequence<T>` is slow and can be worked around by wrapping the `ReadOnlySequence<T>` with another struct and copying it into a `Span<T>` and using the `Slice()` operation on span.
+
+The following example is a simplified version from the MemoryPack benchmark tests.
+
+```csharp
+ref struct SpanWriter
+{
+    Span<byte> raw;
+
+    public SpanWriter(byte[] buffer)
+    {
+        raw = buffer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Advance(int count)
+    {
+        raw = raw.Slice(count);
+    }
+}
+```
+
 ## To be written
 
 - Locks: `lock`, `SemaphmoreSlim`, `Interlocked`, and the new `System.Threading.Lock` lock.
