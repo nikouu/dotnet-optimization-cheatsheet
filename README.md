@@ -984,3 +984,4 @@ ref struct SpanWriter
 - Having a class as `sealed`
     - [Performance Improvements in .NET 6 by Stephen Toub](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-6/)
 - LINQ and how there may be times on very hot paths where it might be more useful to write your own for loop; with the caveat that LINQ has fantastic optimizations with SIMD under the hood which may be in play and a developer may be de-optimizing with a for loop.
+    - [An even DEEPER Dive into LINQ with Stephen Toub](https://www.youtube.com/watch?v=W4-NVVNwCWs)	
