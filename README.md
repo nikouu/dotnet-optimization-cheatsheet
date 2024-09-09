@@ -981,3 +981,5 @@ ref struct SpanWriter
     - [A brief look at StringValues by Andrew Lock](https://andrewlock.net/a-brief-look-at-stringvalues/)
 - `System.Text.Json.Utf8*`
     - [MS Blog](https://devblogs.microsoft.com/dotnet/the-convenience-of-system-text-json/)
+- Having a class as `sealed`
+    - [Performance Improvements in .NET 6 by Stephen Toub](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-6/) 	
