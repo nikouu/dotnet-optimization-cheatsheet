@@ -23,6 +23,8 @@ I've rated each optimisation here in terms of difficulty and you may gauge the d
 
 The optimizations below can range from efficient object overloads to language features. They'll include relevant documentation and attribution to where I originally found them.
 
+And some of these are "cheap tricks" and things you probably shouldn't implement in production, but are fun to include for the sake of learning.
+
 ## Beginning Optimisation
 
 In the shortest way possible:
