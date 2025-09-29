@@ -602,6 +602,7 @@ byte SkipInitLocals()
 ### 🔴 `unsafe` (keyword)
 
 [Official Article](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
+[Unsafe code best practices](https://github.com/dotnet/docs/blob/main/docs/standard/unsafe-code/best-practices.md)
 
 [Unsafe code, pointer types, and function pointers](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code)
 
@@ -632,6 +633,7 @@ class UnsafeTest
 ### 🔴 `Unsafe` (class)
 
 [Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe)
+[Unsafe code best practices](https://github.com/dotnet/docs/blob/main/docs/standard/unsafe-code/best-practices.md)
 
 Safer than the `unsafe` keyword, the `Unsafe` class allows us to do lower level manipulation for performant code by supressing type safety while still being tracked by the garbage collector. There are caveats, especially around type safety.
 
