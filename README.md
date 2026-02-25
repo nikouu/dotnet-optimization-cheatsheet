@@ -23,6 +23,8 @@ I've rated each optimisation here in terms of difficulty and you may gauge the d
 
 The optimizations below can range from efficient object overloads to language features. They'll include relevant documentation and attribution to where I originally found them.
 
+And some of these are "cheap tricks" and things you probably shouldn't implement in production, but are fun to include for the sake of learning.
+
 ## Beginning Optimisation
 
 In the shortest way possible:
@@ -601,6 +603,7 @@ byte SkipInitLocals()
 ### 🔴 `unsafe` (keyword)
 
 [Official Article](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe)
+[Unsafe code best practices](https://github.com/dotnet/docs/blob/main/docs/standard/unsafe-code/best-practices.md)
 
 [Unsafe code, pointer types, and function pointers](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code)
 
@@ -631,6 +634,7 @@ class UnsafeTest
 ### 🔴 `Unsafe` (class)
 
 [Official Reference](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe)
+[Unsafe code best practices](https://github.com/dotnet/docs/blob/main/docs/standard/unsafe-code/best-practices.md)
 
 Safer than the `unsafe` keyword, the `Unsafe` class allows us to do lower level manipulation for performant code by supressing type safety while still being tracked by the garbage collector. There are caveats, especially around type safety.
 
@@ -1005,3 +1009,9 @@ ref struct SpanWriter
     - can go fruther and if possible do a ReadOnlySpan field which puts it into the assembly and dodges the heap allocation
         - `private static ReadOnlySpan<T>`
     - [Performance Improvements in .NET 8](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
+- Having a class as `sealed`
+    - [Performance Improvements in .NET 6 by Stephen Toub](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-6/)
+- LINQ and how there may be times on very hot paths where it might be more useful to write your own for loop; with the caveat that LINQ has fantastic optimizations with SIMD under the hood which may be in play and a developer may be de-optimizing with a for loop.
+    - [An even DEEPER Dive into LINQ with Stephen Toub](https://www.youtube.com/watch?v=W4-NVVNwCWs)
+- `ref` in general
+	- And topics like [Ref-Readonly and In](https://blog.ladeak.net/posts/refreadonly-in)
