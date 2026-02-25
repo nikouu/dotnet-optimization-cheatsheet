@@ -13,11 +13,11 @@ You'll need to consider:
 
 I've rated each optimisation here in terms of difficulty and you may gauge the difficulties differently. Remember, we're looking at the last 3%, so while some are easy to implement, they may only be measurably effective on an extremely hot path.
 
-| Difficulty       | Reasoning                                                                                                                                                                                                                                 |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🟢 Easy         | These are either well known, or simple to drop into existing code with only some knowledge.                                                                                                                                               |
+| Difficulty       | Reasoning                                                                                                              |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 🟢 Easy         | These are either well known, or simple to drop into existing code with only some knowledge.                            |
 | 🟡 Intermediate | Mostly accessible. May require a bit more coding or understanding of specific caveats of use. Own research is advised. |
-| 🔴 Advanced     | Implementation and caveat understanding is critical to prevent app crashes or accidentally reducing performance.                                                                                                                          |
+| 🔴 Advanced     | Implementation and caveat understanding is critical to prevent app crashes or accidentally reducing performance.       |
 
 .NET is always evolving. Some of these may be invalid in the future due to breaking changes or they've been baked into the framework under the hood. 
 
@@ -46,6 +46,7 @@ If you're looking for tools to help, I have: [Optimization-Tools-And-Notes](http
 | [Diagrams of .NET internals](https://goodies.dotnetos.org/)                                                                                                                   | In depth diagrams from the [Dotnetos courses](https://dotnetos.org/products/)                                                                                                                            |
 | [Turbocharged: Writing High-Performance C# and .NET Code](https://www.youtube.com/watch?v=CwISe8blq38)                                                                        | A great video describing multiple ways to improve performance by [Steve Gordon](https://www.stevejgordon.co.uk/)                                                                                         |
 | [Performance tricks I learned from contributing to open source .NET packages](https://www.youtube.com/watch?v=pGgsFW7kDKI)                                                    | A great video describing multiple ways to sqeeze out performance by [Daniel Marbach](https://github.com/danielmarbach)                                                                                   |
+| [Light-second via Wikipedia](https://en.wikipedia.org/wiki/Light-second)                                                                                                      | For fun, since we're often talking about nanoseconds, one nanosecond is about the time it takes for light to travel ~30cm (~1 foot)                                                                      |
 
 ## Optimisations
 
@@ -981,3 +982,26 @@ ref struct SpanWriter
     - [A brief look at StringValues by Andrew Lock](https://andrewlock.net/a-brief-look-at-stringvalues/)
 - `System.Text.Json.Utf8*`
     - [MS Blog](https://devblogs.microsoft.com/dotnet/the-convenience-of-system-text-json/)
+- The use of `ConfigureAwait(false)` to keep returned, awaited work off the potentially busy main/UI thread
+    - [Correcting Common Async/Await Mistakes in .NET 8 - Brandon Minnick - NDC London 2024](https://www.youtube.com/watch?v=GQYd6MWKiLI)
+    - Or the new .NET 8 `ForceYielding` enum value
+    - But not in asp.net core workloads due to lack of `SynchronizationContext` so true and false end up being the same
+- Eliding
+    - And how we probably shouldnt elide if the await is inside a try/catch or a using
+    - [Correcting Common Async/Await Mistakes in .NET 8 - Brandon Minnick - NDC London 2024](https://www.youtube.com/watch?v=GQYd6MWKiLI)
+    - Pro .NET memory
+    - AsyncExpert
+- HttpClient compression
+- Talk about u8?
+    -[C# 11.0 new features: UTF-8 string literals](https://endjin.com/blog/2023/02/dotnet-csharp-11-utf8-string-literals)
+- Use the newer Argument Exception helpers
+    - [Performance Improvements in .NET 8](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
+- The new `Ascii` class
+    - [Performance Improvements in .NET 8](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
+- `CompositeFormat` for composite format strings
+    - [Performance Improvements in .NET 8](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
+- Use static readonly fields to reduce allocations of known data
+    - prevents one version of that per instance
+    - can go fruther and if possible do a ReadOnlySpan field which puts it into the assembly and dodges the heap allocation
+        - `private static ReadOnlySpan<T>`
+    - [Performance Improvements in .NET 8](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/)
